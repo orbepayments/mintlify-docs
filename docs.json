@@ -70,15 +70,15 @@
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "footer": {
     "socials": {
@@ -89,7 +89,8 @@
   },
   "appearance": {
     "strict": true,
-    "default": "dark"
+    "default": "dark",
+    "banner": "Welcome to Blink documentation"
   },
   "logo": "/images/blink_dark_mode_icon.svg",
   "favicon": "/images/blink_dark_mode_icon.svg",
@@ -106,8 +107,5 @@
   },
   "icons": {
     "library": "lucide"
-  },
-  "banner": {
-    "dismissible": false
   }
 }
