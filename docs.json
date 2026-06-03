@@ -32,7 +32,15 @@
               "orders",
               "audience",
               "discounts",
-              "email",
+              {
+                "group": "Email",
+                "pages": [
+                  "cart-recovery",
+                  "broadcasts",
+                  "email-plans",
+                  "email-settings"
+                ]
+              },
               "bumps",
               "store-settings"
             ]
