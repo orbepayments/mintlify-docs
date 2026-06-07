@@ -16,6 +16,20 @@
           "setup",
           "supported-countries",
           {
+            "group": "Storefront",
+            "icon": "store",
+            "expanded": true,
+            "pages": [
+              "creating-a-store",
+              "customization",
+              "orders",
+              "audience",
+              "discounts",
+              "bumps",
+              "store-settings"
+            ]
+          },
+          {
             "group": "Products",
             "pages": [
               "add-products",
@@ -27,17 +41,13 @@
             "expanded": true
           },
           {
-            "group": "Storefront",
+            "group": "Checkouts",
             "pages": [
-              "creating-a-store",
-              "customization",
-              "orders",
-              "audience",
-              "discounts",
-              "bumps",
-              "store-settings"
+              "store-checkout",
+              "custom-checkouts",
+              "overlay-checkout"
             ],
-            "icon": "store",
+            "icon": "shopping-cart",
             "expanded": true
           },
           {
@@ -58,14 +68,8 @@
             "pages": []
           },
           {
-            "group": "Checkouts",
-            "pages": [
-              "store-checkout",
-              "custom-checkouts",
-              "overlay-checkout"
-            ],
-            "icon": "shopping-cart",
-            "expanded": true
+            "group": "Splits",
+            "pages": []
           },
           {
             "group": "Financials",
@@ -76,7 +80,8 @@
             ],
             "icon": "badge-dollar-sign",
             "expanded": true
-          }
+          },
+          "affiliates"
         ]
       }
     ]
