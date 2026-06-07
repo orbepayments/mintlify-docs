@@ -65,11 +65,20 @@
             "group": "Affiliates",
             "icon": "users",
             "expanded": true,
-            "pages": []
+            "pages": [
+              "affiliate-setup",
+              "affiliate-overview",
+              "affiliate-manage",
+              "affiliate-payouts"
+            ]
           },
           {
             "group": "Splits",
-            "pages": []
+            "pages": [
+              "splits-create-a-split",
+              "splits-received",
+              "splits-invites"
+            ]
           },
           {
             "group": "Financials",
@@ -80,8 +89,7 @@
             ],
             "icon": "badge-dollar-sign",
             "expanded": true
-          },
-          "affiliates"
+          }
         ]
       }
     ]
