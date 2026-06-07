@@ -22,7 +22,9 @@
               "share-product",
               "deleting-products",
               "products-sorting"
-            ]
+            ],
+            "icon": "box",
+            "expanded": true
           },
           {
             "group": "Storefront",
@@ -32,18 +34,28 @@
               "orders",
               "audience",
               "discounts",
-              {
-                "group": "Email",
-                "pages": [
-                  "cart-recovery",
-                  "broadcasts",
-                  "email-plans",
-                  "email-settings"
-                ]
-              },
               "bumps",
               "store-settings"
+            ],
+            "icon": "store",
+            "expanded": true
+          },
+          {
+            "group": "Email",
+            "icon": "mail",
+            "expanded": true,
+            "pages": [
+              "cart-recovery",
+              "broadcasts",
+              "email-plans",
+              "email-settings"
             ]
+          },
+          {
+            "group": "Affiliates",
+            "icon": "users",
+            "expanded": true,
+            "pages": []
           },
           {
             "group": "Checkouts",
@@ -51,7 +63,9 @@
               "store-checkout",
               "custom-checkouts",
               "overlay-checkout"
-            ]
+            ],
+            "icon": "shopping-cart",
+            "expanded": true
           },
           {
             "group": "Financials",
@@ -59,7 +73,9 @@
               "merchant-of-records",
               "fees",
               "payouts"
-            ]
+            ],
+            "icon": "badge-dollar-sign",
+            "expanded": true
           }
         ]
       }
