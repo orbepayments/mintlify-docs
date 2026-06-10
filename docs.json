@@ -75,6 +75,7 @@
           {
             "group": "Splits",
             "pages": [
+              "splits-overview",
               "splits-create-a-split",
               "splits-received",
               "splits-invites"
