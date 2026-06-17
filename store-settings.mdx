@@ -42,6 +42,95 @@ All prices and sales will be calculated in this currency.
 
 ---
 
+## **Custom Domain**
+
+Use your own domain instead of your default [yourstore.blink.store](http://yourstore.blink.store) address. Once connected, customers visiting your Blink store will see your custom domain, and anyone visiting your Blink URL will be automatically redirected.
+
+## **Before you start**
+
+You’ll need:
+
+- A domain name you own (for example, `mybrand.com` or `shop.mybrand.com`)
+- Access to your domain’s DNS settings through your registrar or hosting provider (such as Cloudflare, GoDaddy, Namecheap, Squarespace, etc.)
+
+## **Step 1: Add your domain**
+
+1. Open **Store Settings → Domains**.
+2. Enter your domain name.
+3. Click **Add Domain**.
+
+You can connect either:
+
+- A root domain (`yourdomain.com`)
+- A subdomain (`store.yourdomain.com`)
+
+After adding it, Blink will generate the DNS records required to verify ownership.
+
+## **Step 2: Configure your DNS**
+
+Blink will display the DNS records you need to add.
+
+For each record:
+
+- **Type** – The DNS record type (A, CNAME, TXT, etc.)
+- **Name** – The hostname (often `@` for the root domain)
+- **Value** – The destination provided by Blink
+
+Add every record exactly as shown in your domain provider’s DNS settings.
+
+## **Step 3: Verify your domain**
+
+After saving the DNS records:
+
+1. Return to **Store Settings → Domains**.
+2. Click **Verify Connection**.
+
+DNS changes usually take a few minutes, but in some cases can take up to **48 hours** to propagate worldwide.
+
+If verification doesn’t succeed immediately, wait a little longer and try again.
+
+## **Domain Statuses**
+
+### **Pending Verification**
+
+Blink is waiting for your DNS records to propagate or match the required configuration.
+
+### **Verified**
+
+Your domain is connected successfully. Customers can now access your store using your custom domain.
+
+Blink will also automatically redirect visitors from your default `yourstore.blink.store` URL to your custom domain.
+
+## **Removing a domain**
+
+Click **Remove** to disconnect your custom domain from Blink.
+
+After removal:
+
+- Your custom domain will no longer point to your Blink store.
+- Customers can still access your store using your default `yourstore.blink.store` address.
+- You may safely remove the Blink DNS records from your domain provider if you no longer plan to use the domain with Blink.
+
+## **Troubleshooting**
+
+**Verification keeps failing**
+
+- Double-check every DNS record for typos.
+- Make sure all required records have been added.
+- Wait for DNS propagation if the records were added recently.
+
+**My domain still doesn’t work**
+
+- DNS changes can take up to 48 hours, although they’re often much faster.
+
+**Can I change my custom domain later?**
+
+- Yes. Remove the existing domain and connect a new one at any time.
+
+This style matches Blink’s product voice: concise, friendly, and focused on getting users from point A to point B without overwhelming them with DNS terminology.
+
+---
+
 ## **Refund Policy**
 
 Define how refunds work for your store and what customers should expect.
