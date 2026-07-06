@@ -80,6 +80,7 @@
               "splits-invites"
             ]
           },
+          "analytics",
           {
             "group": "Financials",
             "pages": [
