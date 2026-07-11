@@ -98,8 +98,20 @@
         "pages": [
           "api-reference/introduction",
           {
-            "group": "Core API",
-            "openapi": "api-reference/openapi.json"
+            "group": "Blink API",
+            "openapi": "api-reference/blink-api.json"
+          },
+          {
+            "group": "Shopper API",
+            "openapi": "api-reference/shopper-api.json"
+          },
+          {
+            "group": "Growth API",
+            "openapi": "api-reference/growth-api.json"
+          },
+          {
+            "group": "Webhooks & Events",
+            "openapi": "api-reference/webhooks-api.json"
           }
         ]
       }
