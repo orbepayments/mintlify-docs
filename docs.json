@@ -141,7 +141,7 @@
     "family": "Inter"
   },
   "icons": {
-    "library": "tabler"
+    "library": "lucide"
   },
   "openapi": "api-reference/openapi.json"
 }
