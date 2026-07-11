@@ -92,6 +92,10 @@
             "expanded": true
           }
         ]
+      },
+      {
+        "tab": "API",
+        "pages": ["api-reference"]
       }
     ]
   },
@@ -140,5 +144,6 @@
   },
   "icons": {
     "library": "lucide"
-  }
+  },
+  "openapi": "api-reference/openapi.json"
 }
