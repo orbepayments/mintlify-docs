@@ -5,10 +5,7 @@
   "colors": {
     "primary": "#0058F0",
     "light": "#317cff",
-    "dark": "#0058F0",
-    "background": {
-      "dark": "#000000"
-    }
+    "dark": "#0058F0"
   },
   "navigation": {
     "tabs": [
