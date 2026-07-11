@@ -16,8 +16,8 @@
         "tags": [
           "Abandoned Carts"
         ],
-        "summary": "Manually trigger recovery email",
-        "description": "Triggers a recovery email for an abandoned cart. Requires a valid `x-store-id` header and the `id` of the abandoned cart. This is useful to re-engage customers and increase conversion rates.\n\n- **Parameters**: \n  - `id`: The ID of the cart to recover.\n\n- **Responses**:\n  - `201`: Recovery email triggered successfully.\n  - `404`: Abandoned cart not found.\n  - `400`: Cart already recovered.\n  - `401`: Unauthorized, missing store ID.",
+        "summary": "Recover an Abandoned Cart",
+        "description": "This endpoint triggers a recovery email for an abandoned cart specified by the `id` path parameter. It verifies the cart belongs to the store using the `x-store-id` header. If the cart has already been recovered, it returns an error. Otherwise, it generates a recovery URL and sends a recovery email. The recovery email attempts are incremented regardless of email success.",
         "parameters": [
           {
             "name": "id",
@@ -31,28 +31,21 @@
         ],
         "responses": {
           "201": {
-            "description": "Successfully sent recovery email.",
+            "description": "Recovery email successfully triggered.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RecoveryResponse"
+                  "$ref": "#/components/schemas/CartRecoveryResponse"
                 }
               }
             }
-          },
-          "400": {
-            "description": "Cart already recovered.",
-            "content": {}
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
-          },
-          "404": {
-            "description": "Abandoned cart not found.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       }
     },
     "/abandoned-carts/{id}": {
@@ -60,8 +53,8 @@
         "tags": [
           "Abandoned Carts"
         ],
-        "summary": "Retrieve details of a specific abandoned cart",
-        "description": "Fetches details of a particular abandoned cart using the cart `id` and a valid `x-store-id` header. Useful for administrators to view cart details and understand customer behavior.\n\n- **Parameters**:\n  - `id`: The ID of the cart.\n\n- **Responses**:\n  - `200`: Details of the abandoned cart.\n  - `404`: Abandoned cart not found.\n  - `401`: Unauthorized, missing store ID.",
+        "summary": "Retrieve an Abandoned Cart",
+        "description": "Fetches detailed information for a specific abandoned cart identified by the `id` path parameter using `x-store-id` for authentication. Returns relevant cart and product information associated with the abandoned cart.",
         "parameters": [
           {
             "name": "id",
@@ -75,7 +68,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Details of the abandoned cart.",
+            "description": "Abandoned cart details.",
             "content": {
               "application/json": {
                 "schema": {
@@ -83,16 +76,13 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
-          },
-          "404": {
-            "description": "Abandoned cart not found.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       }
     },
     "/abandoned-carts": {
@@ -100,13 +90,12 @@
         "tags": [
           "Abandoned Carts"
         ],
-        "summary": "Retrieve a list of abandoned carts",
-        "description": "Fetches a paginated list of all abandoned carts, filtered by optional query parameters. Requires a valid `x-store-id` header.\n\n- **Query Parameters**:\n  - `status`: Filter by cart status (`open`, `recovered`, `expired`).\n  - `product_id`: Filter by product ID.\n  - `limit`, `page`: Pagination controls.\n\n- **Responses**:\n  - `200`: A list of abandoned carts.\n  - `401`: Unauthorized, missing store ID.",
+        "summary": "List Abandoned Carts",
+        "description": "Retrieves a paginated list of all abandoned carts for the store identified by the `x-store-id` header. Allows filtering by `status` and `product_id`. Utilizes pagination using `limit`, `page`, and `offset` query parameters.",
         "parameters": [
           {
             "name": "status",
             "in": "query",
-            "required": false,
             "description": "Filter carts by status (`open`, `recovered`, `expired`).",
             "schema": {
               "type": "string"
@@ -115,34 +104,15 @@
           {
             "name": "product_id",
             "in": "query",
-            "required": false,
             "description": "Filter carts by product ID.",
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "description": "Number of items per page.",
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "description": "Page number to retrieve.",
-            "schema": {
-              "type": "integer"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "A list of abandoned carts.",
+            "description": "List of abandoned carts with pagination.",
             "content": {
               "application/json": {
                 "schema": {
@@ -150,12 +120,13 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       }
     },
     "/abandoned-carts/trigger": {
@@ -163,42 +134,43 @@
         "tags": [
           "Abandoned Carts"
         ],
-        "summary": "Trigger a recovery email manually",
-        "description": "Manually triggers a recovery email for an abandoned cart specified in the request body. Requires a valid `x-store-id` header.\n\n- **Request Body**:\n  - `cart_id`: The ID of the cart to recover.\n\n- **Responses**:\n  - `200`: Recovery email sent successfully.\n  - `400`: Missing cart ID in request body.\n  - `404`: Abandoned cart not found.\n  - `401`: Unauthorized, missing store ID.",
+        "summary": "Trigger Recovery Email for Abandoned Cart",
+        "description": "Manually triggers a recovery email for the abandoned cart identified by the `cart_id` in the request body. Uses `x-store-id` for authentication and increments recovery email attempts.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RecoverCartRequest"
+                "$ref": "#/components/schemas/TriggerRecoveryEmailRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Successfully sent the recovery email.",
+            "description": "Recovery email triggered successfully.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TriggerResponse"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
-          },
-          "400": {
-            "description": "Missing cart ID in request body.",
-            "content": {}
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
-          },
-          "404": {
-            "description": "Abandoned cart not found.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       }
     },
     "/affiliates/{id}/conversions": {
@@ -206,8 +178,8 @@
         "tags": [
           "Affiliates"
         ],
-        "summary": "Retrieve affiliate conversions",
-        "description": "Returns orders attributed to a specific affiliate. Requires a valid `x-store-id` header and affiliate `id`.\n\n- **Parameters**:\n  - `id`: The ID of the affiliate.\n\n- **Responses**:\n  - `200`: Orders attributed to the affiliate.\n  - `404`: Affiliate not found.\n  - `401`: Unauthorized, missing store ID.",
+        "summary": "Get Affiliate Conversions",
+        "description": "Retrieves a paginated list of orders attributed to a specific affiliate, specified by the `id` path parameter, ensuring the affiliate is part of the store using the `x-store-id` header. Uses pagination with `limit`, `page`, and `offset` query parameters.",
         "parameters": [
           {
             "name": "id",
@@ -221,7 +193,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Orders attributed to the affiliate.",
+            "description": "List of affiliate conversions with pagination.",
             "content": {
               "application/json": {
                 "schema": {
@@ -229,16 +201,13 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
-          },
-          "404": {
-            "description": "Affiliate not found.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       }
     },
     "/affiliates/{id}": {
@@ -246,8 +215,8 @@
         "tags": [
           "Affiliates"
         ],
-        "summary": "Retrieve details of an affiliate",
-        "description": "Fetches detailed information about a specific affiliate using the `id` parameter. Requires a valid `x-store-id` header. This includes the affiliate's program details and conversion statistics such as total conversions, total revenue, total commission, and pending commission. Useful for administrators to monitor affiliate performance.",
+        "summary": "Retrieve Affiliate Details",
+        "description": "This endpoint fetches detailed information about a specific affiliate identified by the `id` path parameter. It ensures the affiliation with the store using the `x-store-id` header. This includes affiliate profiles and conversion statistics such as the number of conversions, total revenue, and commissions. It returns 404 if the affiliate is not found.",
         "parameters": [
           {
             "name": "id",
@@ -261,7 +230,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Affiliate details and statistics.",
+            "description": "Affiliate details including conversion statistics.",
             "content": {
               "application/json": {
                 "schema": {
@@ -269,23 +238,20 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
-          },
-          "404": {
-            "description": "Affiliate not found.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       },
       "patch": {
         "tags": [
           "Affiliates"
         ],
-        "summary": "Update affiliate details",
-        "description": "Updates the details of a specific affiliate using the `id` parameter. Requires a valid `x-store-id` header. Only the `status` can be updated through the request body. Useful for changing the status of an affiliate within the store's affiliate program.",
+        "summary": "Update Affiliate Status",
+        "description": "This endpoint updates the status of an existing affiliate. You can change the status field using the request body. The update is restricted to only allowed fields. It ensures the affiliate membership with the store using the `x-store-id` header.",
         "parameters": [
           {
             "name": "id",
@@ -302,14 +268,14 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AffiliateUpdateRequest"
+                "$ref": "#/components/schemas/UpdateAffiliateRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Affiliate updated successfully.",
+            "description": "Affiliate status updated successfully.",
             "content": {
               "application/json": {
                 "schema": {
@@ -317,20 +283,13 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "No updatable fields provided.",
-            "content": {}
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
-          },
-          "404": {
-            "description": "Affiliate not found.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       }
     },
     "/affiliates/invite": {
@@ -338,38 +297,43 @@
         "tags": [
           "Affiliates"
         ],
-        "summary": "Invite an affiliate",
-        "description": "Programmatically sends an invite to join the affiliate program to a specified email. Requires a valid `x-store-id` header. The invite includes a link to join the program. Useful for growing the affiliate network by inviting potential affiliates directly.",
+        "summary": "Invite Affiliate via Email",
+        "description": "This endpoint allows you to send an invitation to a potential affiliate via email to join the store's affiliate program. The `x-store-id` header is used for verification. You must provide an email in the request body. It constructs an invitation link based on the store's domain settings.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AffiliateInviteRequest"
+                "$ref": "#/components/schemas/InviteAffiliateRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Invitation sent successfully.",
+            "description": "Invitation email sent successfully.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InviteResponse"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
-          },
-          "400": {
-            "description": "Missing email in request body.",
-            "content": {}
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       }
     },
     "/affiliates/links": {
@@ -377,14 +341,14 @@
         "tags": [
           "Affiliates"
         ],
-        "summary": "Generate tracking links",
-        "description": "Generates custom tracking links for an affiliate membership. Requires `membership_id` and `code` in the body, along with a valid `x-store-id` header. These links help track affiliate performance and conversions. Useful for providing affiliates with personalized tracking links.",
+        "summary": "Generate Tracking Link",
+        "description": "This endpoint enables the creation of custom tracking links for an affiliate membership. It requires the `membership_id` and `code` in the request body and verifies the ownership of the membership with the store using the `x-store-id` header.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TrackingLinkRequest"
+                "$ref": "#/components/schemas/GenerateTrackingLinkRequest"
               }
             }
           }
@@ -395,24 +359,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TrackingLinkResponse"
+                  "$ref": "#/components/schemas/TrackingLink"
                 }
               }
             }
-          },
-          "400": {
-            "description": "Invalid request format or link code.",
-            "content": {}
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
-          },
-          "404": {
-            "description": "Affiliate membership not found.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       }
     },
     "/affiliates": {
@@ -420,40 +377,21 @@
         "tags": [
           "Affiliates"
         ],
-        "summary": "List affiliates",
-        "description": "Fetches a list of all affiliates associated with the store. Requires a valid `x-store-id` header. Supports optional filters like `status` and pagination parameters `limit` and `page`. Useful for administrators to view and manage all affiliates.",
+        "summary": "List Affiliates",
+        "description": "This endpoint retrieves a paginated list of all affiliates associated with the store. Pagination can be controlled via `limit`, `page`, and `offset` query parameters, and results can be filtered by `status`. The `x-store-id` is required for authentication.",
         "parameters": [
           {
             "name": "status",
             "in": "query",
-            "required": false,
             "description": "Filter affiliates by status.",
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "description": "Number of items per page.",
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "description": "Page number to retrieve.",
-            "schema": {
-              "type": "integer"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "A list of affiliates.",
+            "description": "List of affiliates with pagination.",
             "content": {
               "application/json": {
                 "schema": {
@@ -461,25 +399,26 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       },
       "post": {
         "tags": [
           "Affiliates"
         ],
-        "summary": "Update affiliate membership status",
-        "description": "Updates the status of an existing affiliate membership. Requires a valid `x-store-id` header. The `membership_id` and `action` (approve, reject, or ban) must be provided in the body. Useful for managing the status of affiliate applications or memberships.",
+        "summary": "Update Affiliate Membership Status",
+        "description": "This endpoint allows you to approve, reject, or ban an affiliate by updating their membership status. You need to supply the `membership_id` and desired `action` in the request body. The `x-store-id` header is used for verification.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MembershipUpdateRequest"
+                "$ref": "#/components/schemas/UpdateAffiliateMembershipStatusRequest"
               }
             }
           }
@@ -494,20 +433,13 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Invalid action or missing membership ID.",
-            "content": {}
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
-          },
-          "404": {
-            "description": "Affiliate membership not found.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       }
     },
     "/audience/{id}": {
@@ -515,8 +447,8 @@
         "tags": [
           "Audience"
         ],
-        "summary": "Retrieve audience member details",
-        "description": "Fetches detailed information about a specific audience member using their `id`. Requires a valid `x-store-id` header. Useful for understanding customer behavior and history within the store.",
+        "summary": "Retrieve Audience Member",
+        "description": "This endpoint retrieves detailed information about a specific audience member. The request is authenticated based on the `x-store-id` header. It returns audience member details like name, email, status, total orders, and lifetime revenue.",
         "parameters": [
           {
             "name": "id",
@@ -534,27 +466,24 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AudienceMemberDetails"
+                  "$ref": "#/components/schemas/AudienceMember"
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
-          },
-          "404": {
-            "description": "Audience member not found.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       },
       "patch": {
         "tags": [
           "Audience"
         ],
-        "summary": "Update audience member status",
-        "description": "Updates the details of an audience member, including the `name` and `status`. Requires a valid `x-store-id` header. Useful for managing customer subscription and engagement status.",
+        "summary": "Update Audience Member",
+        "description": "This endpoint updates the details of an existing audience member. Fields that can be updated include `name` and `status`. The `x-store-id` header is utilized for authentication purposes.",
         "parameters": [
           {
             "name": "id",
@@ -571,7 +500,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AudienceUpdateRequest"
+                "$ref": "#/components/schemas/UpdateAudienceMemberRequest"
               }
             }
           }
@@ -582,31 +511,24 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AudienceMemberDetails"
+                  "$ref": "#/components/schemas/AudienceMember"
                 }
               }
             }
-          },
-          "400": {
-            "description": "No updatable fields provided.",
-            "content": {}
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
-          },
-          "404": {
-            "description": "Audience member not found.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       },
       "delete": {
         "tags": [
           "Audience"
         ],
-        "summary": "Unsubscribe audience member",
-        "description": "Marks an audience member as unsubscribed without deleting their record or orders. Requires a valid `x-store-id` header. Useful for compliance with subscription management and data retention policies.",
+        "summary": "Unsubscribe Audience Member",
+        "description": "This endpoint marks an audience member as unsubscribed (soft delete), which removes their subscription status but keeps their order data. The `x-store-id` header is required for authentication.",
         "parameters": [
           {
             "name": "id",
@@ -624,20 +546,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnsubscribeResponse"
+                  "$ref": "#/components/schemas/UnsubscribeAudienceResponse"
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
-          },
-          "404": {
-            "description": "Audience member not found.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       }
     },
     "/audience/broadcasts": {
@@ -645,73 +564,55 @@
         "tags": [
           "Audience"
         ],
-        "summary": "List all broadcasts",
-        "description": "Fetches a paginated list of email broadcasts sent to the audience. Requires a valid `x-store-id` header. Supports optional filtering by `status`.\n\n- **Query Parameters**:\n  - `status`: Filter broadcasts by status.\n  - `limit`, `page`: Pagination controls.\n\n- **Responses**:\n  - `200`: A list of broadcasts.\n  - `401`: Unauthorized, missing store ID.",
+        "summary": "List Broadcasts",
+        "description": "Retrieve a paginated list of email broadcasts sent to the audience of a specific store, identified by the `x-store-id` header. Supports pagination with `limit`, `page`, and `offset` query parameters, as well as filtering by `status`.",
         "parameters": [
           {
             "name": "status",
             "in": "query",
-            "required": false,
-            "description": "Filter broadcasts by status.",
+            "description": "Filter broadcasts by status (`draft`, `scheduled`, `sent`).",
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "description": "Number of items per page.",
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "description": "Page number to retrieve.",
-            "schema": {
-              "type": "integer"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "A list of broadcasts.",
+            "description": "List of broadcasts along with pagination metadata.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AudienceBroadcastsList"
+                  "$ref": "#/components/schemas/BroadcastsList"
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       },
       "post": {
         "tags": [
           "Audience"
         ],
-        "summary": "Send a broadcast email",
-        "description": "Sends a broadcast email to an audience segment. Requires a valid `x-store-id` header. Must provide `name`, `subject`, `html`, and `recipients_type` in the request body.\n\n- **Request Body**:\n  - `name`: Name of the broadcast.\n  - `subject`: Subject of the email.\n  - `html`: HTML content of the email.\n  - `recipients_type`: Determines the recipients (`all`, `repeat_customers`).\n\n- **Responses**:\n  - `201`: Broadcast email sent successfully.\n  - `400`: Invalid parameters or configuration.\n  - `401`: Unauthorized, missing store ID.",
+        "summary": "Send Broadcast Email",
+        "description": "Send a broadcast email to a selected audience of the store identified by `x-store-id`. Requires `name`, `subject`, `html`, and `recipients_type` in the request body. The recipients can be all subscribers or repeat customers, with detailed sender configurations required.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/BroadcastRequest"
+                "$ref": "#/components/schemas/SendBroadcastRequest"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Broadcast email sent successfully.",
+            "description": "Broadcast email successfully sent and recorded.",
             "content": {
               "application/json": {
                 "schema": {
@@ -719,16 +620,13 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Invalid parameters or configuration.",
-            "content": {}
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       }
     },
     "/audience": {
@@ -736,14 +634,13 @@
         "tags": [
           "Audience"
         ],
-        "summary": "List contacts",
-        "description": "Fetches a list of contacts who have opted into marketing. Requires a valid `x-store-id` header. Supports filtering by `status` and `email`, and pagination.\n\n- **Query Parameters**:\n  - `status`: Filter contacts by status.\n  - `email`: Filter contacts by email.\n  - `limit`, `page`: Pagination controls.\n\n- **Responses**:\n  - `200`: A list of contacts.\n  - `401`: Unauthorized, missing store ID.",
+        "summary": "List Audience Contacts",
+        "description": "Fetch a paginated list of customers who have opted into marketing communications from the store, using the `x-store-id` header for verification. Supports filtering by `status` and `email` with pagination via `limit`, `page`, and `offset` query parameters.",
         "parameters": [
           {
             "name": "status",
             "in": "query",
-            "required": false,
-            "description": "Filter contacts by status.",
+            "description": "Filter contacts by status (e.g., `active`, `unsubscribed`).",
             "schema": {
               "type": "string"
             }
@@ -751,47 +648,29 @@
           {
             "name": "email",
             "in": "query",
-            "required": false,
-            "description": "Filter contacts by email.",
+            "description": "Filter contacts by email pattern.",
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "description": "Number of items per page.",
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "description": "Page number to retrieve.",
-            "schema": {
-              "type": "integer"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "A list of contacts.",
+            "description": "List of audience contacts with pagination.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AudienceList"
+                  "$ref": "#/components/schemas/AudienceContactsList"
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       }
     },
     "/audience/tags": {
@@ -799,64 +678,43 @@
         "tags": [
           "Audience"
         ],
-        "summary": "List tagged customers",
-        "description": "Lists customers based on a specific tag. Requires a valid `x-store-id` header. Must provide a `tag` query parameter.\n\n- **Query Parameters**:\n  - `tag`: Tag to filter customers.\n  - `limit`, `page`: Pagination controls.\n\n- **Responses**:\n  - `200`: Customers with the specified tag.\n  - `400`: Missing or invalid tag parameter.\n  - `401`: Unauthorized, missing store ID.",
+        "summary": "List Customers by Tag",
+        "description": "Retrieve a list of customers associated with a specific tag in their metadata. Requires `tag` query parameter. Authentication is done using the `x-store-id` header.",
         "parameters": [
           {
             "name": "tag",
             "in": "query",
-            "required": true,
             "description": "Tag to filter customers.",
+            "required": true,
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "description": "Number of items per page.",
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "description": "Page number to retrieve.",
-            "schema": {
-              "type": "integer"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Customers with the specified tag.",
+            "description": "List of customers with the specified tag.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TaggedCustomerList"
+                  "$ref": "#/components/schemas/TaggedCustomersList"
                 }
               }
             }
-          },
-          "400": {
-            "description": "Missing or invalid tag parameter.",
-            "content": {}
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       },
       "post": {
         "tags": [
           "Audience"
         ],
-        "summary": "Add a tag to a customer",
-        "description": "Adds a given tag to a specific customer. Requires `customer_id` and `tag` in the request body and a valid `x-store-id` header.\n\n- **Request Body**:\n  - `customer_id`: The ID of the customer.\n  - `tag`: The tag to add.\n\n- **Responses**:\n  - `200`: Tag added successfully.\n  - `400`: Missing parameters.\n  - `401`: Unauthorized, missing store ID.",
+        "summary": "Add Tag to Customer",
+        "description": "Add a specified tag to a customer's metadata within the store, identified via `x-store-id`. Requires `customer_id` and `tag` in the request body.",
         "requestBody": {
           "required": true,
           "content": {
@@ -869,31 +727,28 @@
         },
         "responses": {
           "200": {
-            "description": "Tag added successfully.",
+            "description": "Tag successfully added to the customer.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TagResponse"
+                  "$ref": "#/components/schemas/TagUpdateResponse"
                 }
               }
             }
-          },
-          "400": {
-            "description": "Missing parameters.",
-            "content": {}
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       },
       "delete": {
         "tags": [
           "Audience"
         ],
-        "summary": "Remove a tag from a customer",
-        "description": "Removes a given tag from a specific customer. Requires `customer_id` and `tag` in the request body and a valid `x-store-id` header.\n\n- **Request Body**:\n  - `customer_id`: The ID of the customer.\n  - `tag`: The tag to remove.\n\n- **Responses**:\n  - `200`: Tag removed successfully.\n  - `400`: Missing parameters.\n  - `401`: Unauthorized, missing store ID.",
+        "summary": "Remove Tag from Customer",
+        "description": "Remove a specified tag from a customer's metadata within the store. Requires `customer_id` and `tag` in the request body, and is authenticated via the `x-store-id` header.",
         "requestBody": {
           "required": true,
           "content": {
@@ -906,24 +761,21 @@
         },
         "responses": {
           "200": {
-            "description": "Tag removed successfully.",
+            "description": "Tag successfully removed from the customer.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TagResponse"
+                  "$ref": "#/components/schemas/TagUpdateResponse"
                 }
               }
             }
-          },
-          "400": {
-            "description": "Missing parameters.",
-            "content": {}
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       }
     },
     "/bumps/{id}": {
@@ -931,8 +783,8 @@
         "tags": [
           "Bumps"
         ],
-        "summary": "Get bump details",
-        "description": "Fetches detailed information about a specific bump using its `id`. Requires a valid `x-store-id` header.\n\n- **Parameters**:\n  - `id`: The ID of the bump.\n\n- **Responses**:\n  - `200`: Details of the bump.\n  - `401`: Unauthorized, missing store ID.\n  - `404`: Bump not found.",
+        "summary": "Retrieve Bump Details",
+        "description": "Fetch detailed information of a bump by its `id`, which is part of the specified store, verified by `x-store-id`. Includes bump metadata and associated deliverables.",
         "parameters": [
           {
             "name": "id",
@@ -946,7 +798,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Details of the bump.",
+            "description": "Bump details including associated deliverables.",
             "content": {
               "application/json": {
                 "schema": {
@@ -954,23 +806,20 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
-          },
-          "404": {
-            "description": "Bump not found.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       },
       "patch": {
         "tags": [
           "Bumps"
         ],
-        "summary": "Update bump details",
-        "description": "Updates specific fields of a bump using its `id`. Requires a valid `x-store-id` header. Allowed fields are `title`, `description`, `price`, `badge_title`, `badge_color`.\n\n- **Request Body**:\n  - Updatable fields: `title`, `description`, `price`, `badge_title`, `badge_color`.\n\n- **Responses**:\n  - `200`: Bump updated successfully.\n  - `400`: No updatable fields provided.\n  - `401`: Unauthorized, missing store ID.\n  - `404`: Bump not found.",
+        "summary": "Update Bump Details",
+        "description": "Update details of a bump, including `title`, `description`, `price`, `badge_title`, and `badge_color`. Uses `x-store-id` for store ownership verification.",
         "parameters": [
           {
             "name": "id",
@@ -1002,27 +851,20 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "No updatable fields provided.",
-            "content": {}
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
-          },
-          "404": {
-            "description": "Bump not found.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       },
       "delete": {
         "tags": [
           "Bumps"
         ],
-        "summary": "Delete a bump",
-        "description": "Deletes a specific bump using its `id`. Requires a valid `x-store-id` header.\n\n- **Parameters**:\n  - `id`: The ID of the bump.\n\n- **Responses**:\n  - `200`: Bump deleted successfully.\n  - `401`: Unauthorized, missing store ID.\n  - `404`: Bump not found.",
+        "summary": "Delete Bump",
+        "description": "Delete a bump by its `id`, ensuring store ownership with `x-store-id`. This effectively removes the bump from store records.",
         "parameters": [
           {
             "name": "id",
@@ -1044,16 +886,13 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
-          },
-          "404": {
-            "description": "Bump not found.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       }
     },
     "/bumps": {
@@ -1062,30 +901,28 @@
           "Bumps"
         ],
         "summary": "List all bumps",
-        "description": "Retrieves a paginated list of all bumps associated with the store. Requires a valid `x-store-id` header. This endpoint is useful for store administrators to view and manage their available bumps.\n\n- **Responses**:\n  - `200`: A list of bumps.\n  - `401`: Unauthorized, missing store ID.\n\nEach bump includes metadata such as title, description, price, and more.",
+        "description": "Retrieve a paginated list of all bumps created in the store. A bump typically represents an add-on or upsell associated with a product. Use query parameters for pagination.\n\n- **Request Headers:**\n  - `x-store-id` (string, required): The ID of the store making the request.\n\n- **Query Parameters:**\n  - `limit` (integer, optional): Number of bumps per page.\n  - `page` (integer, optional): Page number to retrieve.\n\n- **Response:** Returns a list of bumps including details and metadata.\n\nThis is useful for managing upsell strategies in an e-commerce setup.",
         "parameters": [
           {
             "name": "limit",
             "in": "query",
-            "required": false,
-            "description": "Number of items per page.",
             "schema": {
               "type": "integer"
-            }
+            },
+            "description": "Number of bumps per page."
           },
           {
             "name": "page",
             "in": "query",
-            "required": false,
-            "description": "Page number to retrieve.",
             "schema": {
               "type": "integer"
-            }
+            },
+            "description": "Page number to retrieve."
           }
         ],
         "responses": {
           "200": {
-            "description": "A list of bumps.",
+            "description": "Successful response containing list of bumps.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1093,21 +930,21 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       },
       "post": {
         "tags": [
           "Bumps"
         ],
-        "summary": "Create a bump",
-        "description": "Creates a new bump for the store with specified details. Requires a valid `x-store-id` header. This helps store owners to add new bump offers to their product line-up.\n\n- **Request Body**:\n  - `title`: The title of the bump (required).\n  - `price`: Price of the bump in cents (required).\n  - `description`, `badge_title`, `badge_color`: Optional metadata about the bump.\n\n- **Responses**:\n  - `201`: Bump created successfully.\n  - `400`: Missing required parameters.\n  - `401`: Unauthorized, missing store ID.",
+        "summary": "Create a new bump",
+        "description": "Create a new bump which can be an add-on or upsell product to enhance sales.\n\n- **Request Headers:**\n  - `x-store-id` (string, required): The ID of the store making the request.\n\n- **Request Body:**\n  - `title` (string, required): Title of the bump.\n  - `price` (number, required): Price of the bump in cents.\n  - `description` (string, optional): Description of the bump.\n  - `badge_title` (string, optional): Title of the badge for the bump.\n  - `badge_color` (string, optional): Color of the badge.\n\n- **Response:** The created bump object.\n\nThis endpoint facilitates the creation of catchy add-ons for product pages.",
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -1126,25 +963,22 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Missing required parameters.",
-            "content": {}
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       }
     },
-    "/discounts/{id}": {
+    "/v1/discounts/{id}": {
       "get": {
         "tags": [
           "Discounts"
         ],
-        "summary": "Get discount details",
-        "description": "Retrieves details about a specific discount using its `id`. Requires a valid `x-store-id` header. This endpoint is used to retrieve discount or coupon information for promotions and sales analysis.\n\n- **Parameters**:\n  - `id`: The ID of the discount.\n\n- **Responses**:\n  - `200`: Discount details retrieved successfully.\n  - `404`: Discount not found.\n  - `401`: Unauthorized, missing store ID.",
+        "summary": "Retrieve Discount Details",
+        "description": "Fetch details of a specific discount using its ID and the store’s `x-store-id`. Returns discount information including its name, code, type, amount, and associated products. Returns 404 if the discount is not found.",
         "parameters": [
           {
             "name": "id",
@@ -1167,22 +1001,22 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
-          },
           "404": {
-            "description": "Discount not found.",
-            "content": {}
+            "description": "Discount not found."
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       },
       "patch": {
         "tags": [
           "Discounts"
         ],
-        "summary": "Update discount details",
-        "description": "Updates specific fields of a discount using its `id`. Requires a valid `x-store-id` header. Updatable fields include `name`, `code`, `discount_type`, `discount_amount`, `status`, `max_redemptions`, `starts_at`, `expires_at`, `product_ids`. Useful for managing discount campaigns and their attributes.\n\n- **Parameters**:\n  - `id`: The ID of the discount.\n\n- **Request Body**:\n  - Updatable fields: `name`, `code`, `discount_type`, `discount_amount`, `status`, `max_redemptions`, `starts_at`, `expires_at`, `product_ids`.\n\n- **Responses**:\n  - `200`: Discount updated successfully.\n  - `400`: No updatable fields provided.\n  - `404`: Discount not found.\n  - `401`: Unauthorized, missing store ID.",
+        "summary": "Update Discount",
+        "description": "Update the details of an existing discount identified by its ID. Allows modification of various fields including `name`, `code`, `discount_type`, and more. Requires `x-store-id` for authorization. Returns the updated discount data.",
         "parameters": [
           {
             "name": "id",
@@ -1199,7 +1033,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DiscountUpdateRequest"
+                "$ref": "#/components/schemas/UpdateDiscountRequest"
               }
             }
           }
@@ -1216,25 +1050,24 @@
             }
           },
           "400": {
-            "description": "No updatable fields provided.",
-            "content": {}
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
+            "description": "Bad Request - No updatable fields provided."
           },
           "404": {
-            "description": "Discount not found.",
-            "content": {}
+            "description": "Discount not found."
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       },
       "delete": {
         "tags": [
           "Discounts"
         ],
-        "summary": "Delete a discount",
-        "description": "Deletes a specific discount using its `id`. Requires a valid `x-store-id` header. This is useful for removing expired or obsolete discounts from the system.\n\n- **Parameters**:\n  - `id`: The ID of the discount.\n\n- **Responses**:\n  - `200`: Discount deleted successfully.\n  - `404`: Discount not found.\n  - `401`: Unauthorized, missing store ID.",
+        "summary": "Delete Discount",
+        "description": "Delete a discount using its ID, ensuring store authorization using `x-store-id`. Completely removes the discount from the system and marks it as deleted. Confirm the operation through the returned confirmation message.",
         "parameters": [
           {
             "name": "id",
@@ -1257,89 +1090,71 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
-          },
           "404": {
-            "description": "Discount not found.",
-            "content": {}
+            "description": "Discount not found."
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       }
     },
-    "/discounts": {
+    "/v1/discounts": {
       "get": {
         "tags": [
           "Discounts"
         ],
-        "summary": "Retrieve all discounts",
-        "description": "This endpoint retrieves a paginated list of discounts (coupons) associated with a store. Requires a valid `x-store-id` header. You can filter by the discount's status and manage the pagination.\n\n- **Query Parameters**:\n  - `status`: Filter by discount status.\n  - `limit`: Number of items per page.\n  - `page`: Page number to retrieve.\n\n- **Responses**:\n  - `200`: Discounts list retrieved successfully.\n  - `401`: Unauthorized, missing store ID.",
+        "summary": "List Discounts",
+        "description": "Fetch a paginated list of all discounts available within a store using `x-store-id`. Supports filtering by `status` and includes pagination via `limit`, `page`, and `offset`. Returns discount details such as codes, types, and amounts.",
         "parameters": [
           {
             "name": "status",
             "in": "query",
-            "required": false,
             "description": "Filter discounts by status.",
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "description": "Number of items per page.",
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "description": "Page number to retrieve.",
-            "schema": {
-              "type": "integer"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Discounts list retrieved successfully.",
+            "description": "List of discounts with pagination.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DiscountsList"
+                  "$ref": "#/components/schemas/DiscountsListResponse"
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       },
       "post": {
         "tags": [
           "Discounts"
         ],
-        "summary": "Create a new coupon",
-        "description": "Creates a new discount (coupon) for the store. Requires `x-store-id`, and mandatory fields include `name`, `code`, `discount_type`, and `discount_amount`. Useful for store promotions to attract more customers.\n\n- **Request Body**:\n  - `name`: The name of the discount.\n  - `code`: A unique code for the discount.\n  - `discount_type`: Type of discount ('percentage' or 'fixed').\n  - `discount_amount`: The discount value.\n\n- **Responses**:\n  - `201`: Coupon created successfully.\n  - `400`: Missing or invalid fields.\n  - `409`: Coupon code already exists.\n  - `401`: Unauthorized, missing store ID.",
+        "summary": "Create a Discount",
+        "description": "Create a new discount code for a store identified by `x-store-id`. Requires details such as `name`, `code`, `discount_type`, and `discount_amount`. Checks for code uniqueness within the store. Returns the created discount detail.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewDiscountRequest"
+                "$ref": "#/components/schemas/CreateDiscountRequest"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Coupon created successfully.",
+            "description": "Discount created successfully.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1348,34 +1163,30 @@
               }
             }
           },
-          "400": {
-            "description": "Missing or invalid fields.",
-            "content": {}
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
-          },
           "409": {
-            "description": "Coupon code already exists.",
-            "content": {}
+            "description": "Conflict - A discount with this code already exists."
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       }
     },
-    "/emails/broadcast": {
+    "/api/v1/emails/broadcast": {
       "post": {
         "tags": [
           "Emails"
         ],
-        "summary": "Send broadcast email",
-        "description": "Sends a targeted broadcast email to customers filtered by a specific tag or to all customers. Requires a valid `x-store-id` header, `subject`, and `html` fields.\n\n- **Request Body**:\n  - `subject`: Subject line of the email.\n  - `html`: The HTML content of the email.\n  - `tag`: Filter recipients by tag.\n  - `target_all`: Set `true` to send to all customers.\n\n- **Responses**:\n  - `200`: Broadcast sent successfully.\n  - `400`: Improper request format.\n  - `401`: Unauthorized, missing store ID.",
+        "summary": "Broadcast Email",
+        "description": "Send a broadcast email to a segment of customers identified by their store tag, or to all customers. Requires `subject` and `html` in the request body. Verifies the store using `x-store-id` and checks customer availability before sending emails.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EmailBroadcastRequest"
+                "$ref": "#/components/schemas/BroadcastEmailRequest"
               }
             }
           }
@@ -1386,20 +1197,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EmailBroadcastResponse"
+                  "$ref": "#/components/schemas/BroadcastEmailResponse"
                 }
               }
             }
-          },
-          "400": {
-            "description": "Improper request format.",
-            "content": {}
-          },
-          "401": {
-            "description": "Unauthorized, missing store ID.",
-            "content": {}
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       }
     }
   },
@@ -1416,7 +1224,7 @@
       }
     },
     "schemas": {
-      "RecoveryResponse": {
+      "CartRecoveryResponse": {
         "type": "object",
         "properties": {
           "data": {
@@ -1466,7 +1274,8 @@
             "type": "integer"
           },
           "created_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           },
           "stripe_checkout_session_id": {
             "type": "string"
@@ -1512,27 +1321,16 @@
           }
         }
       },
-      "RecoverCartRequest": {
+      "TriggerRecoveryEmailRequest": {
         "type": "object",
-        "required": [
-          "cart_id"
-        ],
         "properties": {
           "cart_id": {
             "type": "string"
           }
-        }
-      },
-      "TriggerResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
+        },
+        "required": [
+          "cart_id"
+        ]
       },
       "AffiliateConversions": {
         "type": "object",
@@ -1578,7 +1376,8 @@
                   "type": "string"
                 },
                 "created_at": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "customer": {
                   "type": "object",
@@ -1626,7 +1425,8 @@
             "type": "string"
           },
           "created_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           },
           "affiliate": {
             "type": "object",
@@ -1641,10 +1441,7 @@
                 "type": "string"
               },
               "social_links": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
+                "type": "string"
               }
             }
           },
@@ -1667,42 +1464,30 @@
           }
         }
       },
-      "AffiliateUpdateRequest": {
+      "UpdateAffiliateRequest": {
         "type": "object",
         "properties": {
           "status": {
             "type": "string"
           }
-        }
-      },
-      "AffiliateInviteRequest": {
-        "type": "object",
+        },
         "required": [
-          "email"
-        ],
+          "status"
+        ]
+      },
+      "InviteAffiliateRequest": {
+        "type": "object",
         "properties": {
           "email": {
             "type": "string"
           }
-        }
-      },
-      "InviteResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      },
-      "TrackingLinkRequest": {
-        "type": "object",
+        },
         "required": [
-          "membership_id",
-          "code"
-        ],
+          "email"
+        ]
+      },
+      "GenerateTrackingLinkRequest": {
+        "type": "object",
         "properties": {
           "membership_id": {
             "type": "string"
@@ -1710,24 +1495,20 @@
           "code": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "membership_id",
+          "code"
+        ]
       },
-      "TrackingLinkResponse": {
+      "TrackingLink": {
         "type": "object",
         "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "membership_id": {
-                "type": "string"
-              },
-              "code": {
-                "type": "string"
-              }
-            }
+          "membership_id": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
           }
         }
       },
@@ -1759,22 +1540,27 @@
           }
         }
       },
-      "MembershipUpdateRequest": {
+      "UpdateAffiliateMembershipStatusRequest": {
         "type": "object",
-        "required": [
-          "membership_id",
-          "action"
-        ],
         "properties": {
           "membership_id": {
             "type": "string"
           },
           "action": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "approve",
+              "reject",
+              "ban"
+            ]
           }
-        }
+        },
+        "required": [
+          "membership_id",
+          "action"
+        ]
       },
-      "AudienceMemberDetails": {
+      "AudienceMember": {
         "type": "object",
         "properties": {
           "id": {
@@ -1796,11 +1582,12 @@
             "type": "number"
           },
           "created_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
-      "AudienceUpdateRequest": {
+      "UpdateAudienceMemberRequest": {
         "type": "object",
         "properties": {
           "name": {
@@ -1809,20 +1596,26 @@
           "status": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "status"
+        ]
       },
-      "UnsubscribeResponse": {
+      "UnsubscribeAudienceResponse": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string"
           },
           "status": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "unsubscribed"
+            ]
           }
         }
       },
-      "AudienceBroadcastsList": {
+      "BroadcastsList": {
         "type": "object",
         "properties": {
           "meta": {
@@ -1869,24 +1662,20 @@
                   "type": "object"
                 },
                 "sent_at": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "created_at": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 }
               }
             }
           }
         }
       },
-      "BroadcastRequest": {
+      "SendBroadcastRequest": {
         "type": "object",
-        "required": [
-          "name",
-          "subject",
-          "html",
-          "recipients_type"
-        ],
         "properties": {
           "name": {
             "type": "string"
@@ -1904,7 +1693,13 @@
               "repeat_customers"
             ]
           }
-        }
+        },
+        "required": [
+          "name",
+          "subject",
+          "html",
+          "recipients_type"
+        ]
       },
       "BroadcastResponse": {
         "type": "object",
@@ -1928,7 +1723,7 @@
           }
         }
       },
-      "AudienceList": {
+      "AudienceContactsList": {
         "type": "object",
         "properties": {
           "meta": {
@@ -1951,12 +1746,12 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/AudienceMemberDetails"
+              "$ref": "#/components/schemas/AudienceMember"
             }
           }
         }
       },
-      "TaggedCustomerList": {
+      "TaggedCustomersList": {
         "type": "object",
         "properties": {
           "meta": {
@@ -1991,7 +1786,8 @@
                   "type": "string"
                 },
                 "created_at": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "metadata": {
                   "type": "object"
@@ -2003,10 +1799,6 @@
       },
       "AddTagRequest": {
         "type": "object",
-        "required": [
-          "customer_id",
-          "tag"
-        ],
         "properties": {
           "customer_id": {
             "type": "string"
@@ -2014,14 +1806,14 @@
           "tag": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "customer_id",
+          "tag"
+        ]
       },
       "RemoveTagRequest": {
         "type": "object",
-        "required": [
-          "customer_id",
-          "tag"
-        ],
         "properties": {
           "customer_id": {
             "type": "string"
@@ -2029,9 +1821,13 @@
           "tag": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "customer_id",
+          "tag"
+        ]
       },
-      "TagResponse": {
+      "TagUpdateResponse": {
         "type": "object",
         "properties": {
           "data": {
@@ -2050,7 +1846,7 @@
           }
         }
       },
-      "BalanceResponse": {
+      "StoreBalance": {
         "type": "object",
         "properties": {
           "data": {
@@ -2122,7 +1918,8 @@
             "type": "number"
           },
           "created_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           },
           "deliverables": {
             "type": "array",
@@ -2198,35 +1995,147 @@
       },
       "CreateBumpRequest": {
         "type": "object",
-        "required": [
-          "title",
-          "price"
-        ],
         "properties": {
           "title": {
             "type": "string"
           },
+          "price": {
+            "type": "number"
+          },
           "description": {
             "type": "string"
           },
-          "price": {
-            "type": "integer"
-          },
           "badge_title": {
-            "type": "string",
-            "default": "Addon"
+            "type": "string"
           },
           "badge_color": {
-            "type": "string",
-            "default": "green"
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "price"
+        ]
+      },
+      "CheckoutLinksList": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer"
+              },
+              "page": {
+                "type": "integer"
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "has_more": {
+                "type": "boolean"
+              }
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CheckoutLinkDetails"
+            }
           }
         }
       },
-      "CreateCheckoutRequest": {
+      "CreateCheckoutLinkRequest": {
         "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "design": {
+            "type": "object"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
         "required": [
-          "product_id"
-        ],
+          "name"
+        ]
+      },
+      "CheckoutLinkDetails": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "store_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "design": {
+            "type": "object"
+          },
+          "status": {
+            "type": "string"
+          },
+          "views": {
+            "type": "integer"
+          },
+          "sales": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UpdateCheckoutLinkRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "design": {
+            "type": "object"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "CheckoutSessionsList": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer"
+              },
+              "page": {
+                "type": "integer"
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "has_more": {
+                "type": "boolean"
+              }
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CheckoutSessionDetails"
+            }
+          }
+        }
+      },
+      "CreateCheckoutSessionRequest": {
+        "type": "object",
         "properties": {
           "product_id": {
             "type": "string"
@@ -2244,10 +2153,7 @@
             "type": "string"
           },
           "splits": {
-            "type": "array",
-            "items": {
-              "type": "object"
-            }
+            "type": "object"
           },
           "success_url": {
             "type": "string"
@@ -2264,9 +2170,12 @@
           "metadata": {
             "type": "object"
           }
-        }
+        },
+        "required": [
+          "product_id"
+        ]
       },
-      "CheckoutSession": {
+      "CheckoutSessionDetails": {
         "type": "object",
         "properties": {
           "id": {
@@ -2294,14 +2203,15 @@
             "type": "string"
           },
           "variant_id": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "expires_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           },
           "created_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -2336,14 +2246,19 @@
                 "used_credits": {
                   "type": "integer"
                 },
+                "remaining_credits": {
+                  "type": "integer"
+                },
                 "rollover_unused": {
                   "type": "boolean"
                 },
                 "created_at": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "updated_at": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "meter": {
                   "type": "object",
@@ -2361,16 +2276,13 @@
                       "type": "string"
                     }
                   }
-                },
-                "remaining_credits": {
-                  "type": "integer"
                 }
               }
             }
           }
         }
       },
-      "CustomerOrders": {
+      "CustomerOrdersList": {
         "type": "object",
         "properties": {
           "meta": {
@@ -2420,7 +2332,8 @@
                   "type": "string"
                 },
                 "created_at": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "product": {
                   "type": "object",
@@ -2463,61 +2376,58 @@
       "CustomerDetails": {
         "type": "object",
         "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "store_id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              },
-              "status": {
-                "type": "string"
-              },
-              "total_orders": {
-                "type": "integer"
-              },
-              "lifetime_revenue": {
-                "type": "number"
-              },
-              "metadata": {
-                "type": "object"
-              },
-              "created_at": {
-                "type": "string"
-              },
-              "orders": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string"
-                    },
-                    "status": {
-                      "type": "string"
-                    },
-                    "amount": {
-                      "type": "number"
-                    },
-                    "created_at": {
-                      "type": "string"
-                    }
-                  }
+          "id": {
+            "type": "string"
+          },
+          "store_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "total_orders": {
+            "type": "integer"
+          },
+          "lifetime_revenue": {
+            "type": "number"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "orders": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "number"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
                 }
               }
             }
           }
         }
       },
-      "CustomerUpdateRequest": {
+      "UpdateCustomerRequest": {
         "type": "object",
         "properties": {
           "name": {
@@ -2560,13 +2470,15 @@
                   "type": "string"
                 },
                 "current_period_end": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "cancel_at_period_end": {
                   "type": "boolean"
                 },
                 "created_at": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "product": {
                   "type": "object",
@@ -2584,7 +2496,7 @@
           }
         }
       },
-      "CustomerList": {
+      "CustomersListResponse": {
         "type": "object",
         "properties": {
           "meta": {
@@ -2612,11 +2524,8 @@
           }
         }
       },
-      "NewCustomerRequest": {
+      "CreateCustomerRequest": {
         "type": "object",
-        "required": [
-          "email"
-        ],
         "properties": {
           "name": {
             "type": "string"
@@ -2624,55 +2533,52 @@
           "email": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "email"
+        ]
       },
       "DiscountDetails": {
         "type": "object",
         "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "store_id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "code": {
-                "type": "string"
-              },
-              "discount_type": {
-                "type": "string"
-              },
-              "discount_amount": {
-                "type": "number"
-              },
-              "status": {
-                "type": "string"
-              },
-              "max_redemptions": {
-                "type": "integer"
-              },
-              "starts_at": {
-                "type": "string"
-              },
-              "expires_at": {
-                "type": "string"
-              },
-              "product_ids": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "discount_type": {
+            "type": "string"
+          },
+          "discount_amount": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          },
+          "max_redemptions": {
+            "type": "integer"
+          },
+          "starts_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "product_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           }
         }
       },
-      "DiscountUpdateRequest": {
+      "UpdateDiscountRequest": {
         "type": "object",
         "properties": {
           "name": {
@@ -2694,10 +2600,12 @@
             "type": "integer"
           },
           "starts_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           },
           "expires_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           },
           "product_ids": {
             "type": "array",
@@ -2707,58 +2615,8 @@
           }
         }
       },
-      "DeleteDiscountResponse": {
+      "CreateDiscountRequest": {
         "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "deleted": {
-                "type": "boolean"
-              }
-            }
-          }
-        }
-      },
-      "DiscountsList": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "type": "object",
-            "properties": {
-              "total": {
-                "type": "integer"
-              },
-              "page": {
-                "type": "integer"
-              },
-              "limit": {
-                "type": "integer"
-              },
-              "has_more": {
-                "type": "boolean"
-              }
-            }
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DiscountDetails"
-            }
-          }
-        }
-      },
-      "NewDiscountRequest": {
-        "type": "object",
-        "required": [
-          "name",
-          "code",
-          "discount_type",
-          "discount_amount"
-        ],
         "properties": {
           "name": {
             "type": "string"
@@ -2796,9 +2654,54 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "required": [
+          "name",
+          "code",
+          "discount_type",
+          "discount_amount"
+        ]
+      },
+      "DeleteDiscountResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "deleted": {
+            "type": "boolean"
+          }
         }
       },
-      "DisputesList": {
+      "DiscountsListResponse": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer"
+              },
+              "page": {
+                "type": "integer"
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "has_more": {
+                "type": "boolean"
+              }
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscountDetails"
+            }
+          }
+        }
+      },
+      "DisputesListResponse": {
         "type": "object",
         "properties": {
           "meta": {
@@ -2838,12 +2741,8 @@
           }
         }
       },
-      "EmailBroadcastRequest": {
+      "BroadcastEmailRequest": {
         "type": "object",
-        "required": [
-          "subject",
-          "html"
-        ],
         "properties": {
           "subject": {
             "type": "string"
@@ -2859,7 +2758,7 @@
           }
         }
       },
-      "EmailBroadcastResponse": {
+      "BroadcastEmailResponse": {
         "type": "object",
         "properties": {
           "success": {
@@ -2873,37 +2772,6 @@
             "items": {
               "type": "string"
             }
-          }
-        }
-      },
-      "EventTrackingRequest": {
-        "type": "object",
-        "required": [
-          "eventName"
-        ],
-        "properties": {
-          "eventName": {
-            "type": "string"
-          },
-          "eventData": {
-            "type": "object"
-          },
-          "url": {
-            "type": "string"
-          },
-          "referrer": {
-            "type": "string"
-          }
-        }
-      },
-      "EventTrackingResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string"
           }
         }
       },
@@ -2958,7 +2826,8 @@
             "type": "string"
           },
           "created_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           },
           "product_id": {
             "type": "string"
@@ -3001,7 +2870,37 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/FileDetails"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "product_id": {
+                  "type": "string"
+                },
+                "variant_id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "button_label": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
             }
           }
         }
@@ -3010,91 +2909,99 @@
         "type": "object",
         "properties": {
           "data": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            }
           }
         }
       },
       "LicenseKeyDetails": {
         "type": "object",
         "properties": {
-          "data": {
+          "id": {
+            "type": "string"
+          },
+          "store_id": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "activations": {
+            "type": "integer"
+          },
+          "activation_limit": {
+            "type": "integer"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "product": {
             "type": "object",
             "properties": {
               "id": {
                 "type": "string"
               },
-              "store_id": {
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "customer": {
+            "type": "object",
+            "properties": {
+              "id": {
                 "type": "string"
               },
-              "key": {
+              "name": {
                 "type": "string"
               },
-              "status": {
+              "email": {
+                "type": "string"
+              }
+            }
+          },
+          "order": {
+            "type": "object",
+            "properties": {
+              "id": {
                 "type": "string"
               },
-              "activations": {
-                "type": "integer"
-              },
-              "activation_limit": {
-                "type": "integer"
-              },
-              "expires_at": {
-                "type": "string"
+              "amount": {
+                "type": "number"
               },
               "created_at": {
-                "type": "string"
-              },
-              "updated_at": {
-                "type": "string"
-              },
-              "product": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "name": {
-                    "type": "string"
-                  }
-                }
-              },
-              "customer": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "email": {
-                    "type": "string"
-                  }
-                }
-              },
-              "order": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "amount": {
-                    "type": "number"
-                  },
-                  "created_at": {
-                    "type": "string"
-                  }
-                }
+                "type": "string",
+                "format": "date-time"
               }
             }
           }
         }
       },
-      "LicenseKeyUpdateRequest": {
+      "UpdateLicenseKeyRequest": {
         "type": "object",
         "properties": {
           "expires_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           },
           "activation_limit": {
             "type": "integer"
@@ -3110,9 +3017,12 @@
           "license_key": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "license_key"
+        ]
       },
-      "ActivateLicenseKeyResponse": {
+      "LicenseKeyActivationResponse": {
         "type": "object",
         "properties": {
           "activated": {
@@ -3134,16 +3044,227 @@
           }
         }
       },
-      "RefundRequest": {
+      "LicenseKeysList": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer"
+              }
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LicenseKeyDetails"
+            }
+          }
+        }
+      },
+      "ValidateLicenseKeyRequest": {
+        "type": "object",
+        "properties": {
+          "license_key": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "license_key"
+        ]
+      },
+      "LicenseKeyValidationResponse": {
+        "type": "object",
+        "properties": {
+          "valid": {
+            "type": "boolean"
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "activations": {
+                "type": "integer"
+              },
+              "activation_limit": {
+                "type": "integer"
+              },
+              "expires_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "customer_id": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "MeterDetails": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "store_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UpdateMeterRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          }
+        }
+      },
+      "MetersList": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer"
+              },
+              "page": {
+                "type": "integer"
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "has_more": {
+                "type": "boolean"
+              }
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MeterDetails"
+            }
+          }
+        }
+      },
+      "CreateMeterRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "event_name": {
+            "type": "string"
+          },
+          "aggregation_type": {
+            "type": "string",
+            "enum": [
+              "sum",
+              "count",
+              "max",
+              "latest"
+            ]
+          },
+          "unit": {
+            "type": "string",
+            "default": "unit"
+          }
+        },
+        "required": [
+          "name",
+          "event_name",
+          "aggregation_type"
+        ]
+      },
+      "MetricsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "period": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "end": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              },
+              "orders": {
+                "type": "object",
+                "properties": {
+                  "count": {
+                    "type": "integer"
+                  },
+                  "gross_revenue": {
+                    "type": "number"
+                  },
+                  "net_revenue": {
+                    "type": "number"
+                  }
+                }
+              },
+              "subscriptions": {
+                "type": "object",
+                "properties": {
+                  "active": {
+                    "type": "integer"
+                  },
+                  "mrr": {
+                    "type": "number"
+                  },
+                  "arr": {
+                    "type": "number"
+                  }
+                }
+              },
+              "customers": {
+                "type": "object",
+                "properties": {
+                  "new_in_period": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "RefundOrderRequest": {
         "type": "object",
         "properties": {
           "amount": {
             "type": "integer",
-            "description": "The amount to refund in cents."
+            "description": "Amount to refund in cents if partial refund is desired."
           },
           "reason": {
             "type": "string",
-            "description": "The reason for the refund."
+            "description": "Reason for the refund. Defaults to 'requested_by_customer'."
           }
         }
       },
@@ -3169,110 +3290,8 @@
                 "type": "string"
               },
               "created_at": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      },
-      "OrderDetails": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "store_id": {
-                "type": "string"
-              },
-              "status": {
-                "type": "string"
-              },
-              "amount": {
-                "type": "integer"
-              },
-              "net_amount": {
-                "type": "integer"
-              },
-              "tax_amount": {
-                "type": "integer"
-              },
-              "tax_breakdown": {
-                "type": "object"
-              },
-              "customer_country": {
-                "type": "string"
-              },
-              "business_name": {
-                "type": "string"
-              },
-              "customer_tax_id": {
-                "type": "string"
-              },
-              "is_recovery_conversion": {
-                "type": "boolean"
-              },
-              "created_at": {
-                "type": "string"
-              },
-              "product_id": {
-                "type": "string"
-              },
-              "variant_id": {
-                "type": "string"
-              },
-              "subscription_id": {
-                "type": "string"
-              },
-              "affiliate_membership_id": {
-                "type": "string"
-              },
-              "affiliate_commission_cents": {
-                "type": "integer"
-              },
-              "affiliate_payout_status": {
-                "type": "string"
-              },
-              "metadata": {
-                "type": "object"
-              },
-              "customer": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "email": {
-                    "type": "string"
-                  }
-                }
-              },
-              "product": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "name": {
-                    "type": "string"
-                  }
-                }
-              },
-              "variant": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "name": {
-                    "type": "string"
-                  }
-                }
+                "type": "string",
+                "format": "date-time"
               }
             }
           }
@@ -3292,108 +3311,181 @@
           "data": {
             "type": "array",
             "items": {
+              "$ref": "#/components/schemas/OrderDetails"
+            }
+          }
+        }
+      },
+      "OrderDetails": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "store_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "net_amount": {
+            "type": "number"
+          },
+          "tax_amount": {
+            "type": "number"
+          },
+          "tax_breakdown": {
+            "type": "object"
+          },
+          "customer_country": {
+            "type": "string"
+          },
+          "business_name": {
+            "type": "string"
+          },
+          "customer_tax_id": {
+            "type": "string"
+          },
+          "is_recovery_conversion": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "customer": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              }
+            }
+          },
+          "order_items": {
+            "type": "array",
+            "items": {
               "type": "object",
               "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "store_id": {
-                  "type": "string"
-                },
                 "product_id": {
                   "type": "string"
                 },
                 "variant_id": {
                   "type": "string"
                 },
-                "customer_id": {
-                  "type": "string"
+                "price": {
+                  "type": "number"
                 },
-                "status": {
-                  "type": "string"
-                },
-                "amount": {
+                "quantity": {
                   "type": "integer"
-                },
-                "net_amount": {
-                  "type": "integer"
-                },
-                "tax_amount": {
-                  "type": "integer"
-                },
-                "tax_breakdown": {
-                  "type": "object"
-                },
-                "is_recovery_conversion": {
-                  "type": "boolean"
-                },
-                "customer_country": {
-                  "type": "string"
-                },
-                "business_name": {
-                  "type": "string"
-                },
-                "customer_tax_id": {
-                  "type": "string"
-                },
-                "created_at": {
-                  "type": "string"
-                },
-                "subscription_id": {
-                  "type": "string"
-                },
-                "affiliate_membership_id": {
-                  "type": "string"
-                },
-                "affiliate_commission_cents": {
-                  "type": "integer"
-                },
-                "affiliate_payout_status": {
-                  "type": "string"
-                },
-                "metadata": {
-                  "type": "object"
-                },
-                "customer": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string"
-                    },
-                    "email": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "order_items": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "product_id": {
-                        "type": "string"
-                      },
-                      "variant_id": {
-                        "type": "string"
-                      },
-                      "price": {
-                        "type": "integer"
-                      },
-                      "quantity": {
-                        "type": "integer"
-                      }
-                    }
-                  }
                 }
               }
             }
           }
         }
       },
-      "OrganizationMembersList": {
+      "OrganizationDetails": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "organization_name": {
+            "type": "string"
+          },
+          "billing_email": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "OrganizationsList": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer"
+              },
+              "page": {
+                "type": "integer"
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "has_more": {
+                "type": "boolean"
+              }
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganizationDetails"
+            }
+          }
+        }
+      },
+      "CreateOrganizationRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "organization_name": {
+            "type": "string"
+          },
+          "billing_email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "organization_name"
+        ]
+      },
+      "UpdateOrganizationRequest": {
+        "type": "object",
+        "properties": {
+          "organization_name": {
+            "type": "string"
+          },
+          "billing_email": {
+            "type": "string"
+          }
+        }
+      },
+      "AddOrganizationMemberRequest": {
+        "type": "object",
+        "properties": {
+          "seat_id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "seat_id",
+          "email"
+        ]
+      },
+      "OrganizationMembersResponse": {
         "type": "object",
         "properties": {
           "data": {
@@ -3414,19 +3506,24 @@
                   "type": "string"
                 },
                 "created_at": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "customer_members": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string"
-                    },
-                    "email": {
-                      "type": "string"
-                    },
-                    "created_at": {
-                      "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
                     }
                   }
                 }
@@ -3435,133 +3532,184 @@
           }
         }
       },
-      "AssignSeatRequest": {
+      "PayoutsList": {
         "type": "object",
         "properties": {
-          "seat_id": {
-            "type": "string",
-            "description": "The ID of the seat to assign."
+          "meta": {
+            "type": "object",
+            "properties": {
+              "has_more": {
+                "type": "boolean"
+              }
+            }
           },
-          "email": {
-            "type": "string",
-            "description": "The member's email address."
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "integer"
+                },
+                "currency": {
+                  "type": "string"
+                },
+                "payout_date": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
           }
         }
       },
-      "AssignSeatResponse": {
+      "PortalOrdersList": {
         "type": "object",
         "properties": {
-          "success": {
-            "type": "boolean"
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer"
+              }
+            }
           },
-          "message": {
-            "type": "string"
-          }
-        }
-      },
-      "OrganizationDetails": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "organization_name": {
-            "type": "string"
-          },
-          "billing_email": {
-            "type": "string"
-          },
-          "created_at": {
-            "type": "string"
-          }
-        }
-      },
-      "UpdateOrganizationRequest": {
-        "type": "object",
-        "properties": {
-          "organization_name": {
-            "type": "string",
-            "description": "The new organization name."
-          },
-          "billing_email": {
-            "type": "string",
-            "description": "The new billing email."
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "order_id": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "number"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
           }
         }
       },
       "ProductDetails": {
         "type": "object",
         "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "store_id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "description": {
-                "type": "string"
-              },
-              "preview_link": {
-                "type": "string"
-              },
-              "pricing_model": {
-                "type": "string"
-              },
-              "price": {
-                "type": "number"
-              },
-              "currency": {
-                "type": "string"
-              },
-              "status": {
-                "type": "string"
-              },
-              "created_at": {
-                "type": "string"
-              },
-              "subscription_interval": {
-                "type": "string"
-              },
-              "trial_days": {
-                "type": "integer"
-              },
-              "requires_license_key": {
-                "type": "boolean"
-              },
-              "license_key_activation_limit": {
-                "type": "integer"
-              },
-              "cart_recovery_enabled": {
-                "type": "boolean"
-              },
-              "customer_portal_visibility": {
-                "type": "string"
-              },
-              "variants": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/VariantDetails"
+          "id": {
+            "type": "string"
+          },
+          "store_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "preview_link": {
+            "type": "string"
+          },
+          "pricing_model": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "subscription_interval": {
+            "type": "string"
+          },
+          "trial_days": {
+            "type": "integer"
+          },
+          "pricing_tiers": {
+            "type": "string"
+          },
+          "package_size": {
+            "type": "integer"
+          },
+          "metered_prices": {
+            "type": "string"
+          },
+          "requires_license_key": {
+            "type": "boolean"
+          },
+          "license_key_activation_limit": {
+            "type": "integer"
+          },
+          "cart_recovery_enabled": {
+            "type": "boolean"
+          },
+          "customer_portal_visibility": {
+            "type": "boolean"
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductVariantDetails"
+            }
+          },
+          "deliverables": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "button_label": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
                 }
-              },
-              "deliverables": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/DeliverableDetails"
-                }
-              },
-              "images": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ImageDetails"
+              }
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "file_url": {
+                  "type": "string"
+                },
+                "position": {
+                  "type": "integer"
                 }
               }
             }
@@ -3593,7 +3741,7 @@
             "type": "boolean"
           },
           "customer_portal_visibility": {
-            "type": "string"
+            "type": "boolean"
           },
           "preview_link": {
             "type": "string"
@@ -3603,66 +3751,36 @@
           }
         }
       },
-      "VariantDetails": {
+      "ProductVariantsList": {
         "type": "object",
         "properties": {
-          "data": {
+          "meta": {
             "type": "object",
             "properties": {
-              "id": {
-                "type": "string"
-              },
-              "product_id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "description": {
-                "type": "string"
-              },
-              "price": {
-                "type": "number"
-              },
-              "is_active": {
-                "type": "boolean"
-              },
-              "subscription_interval": {
-                "type": "string"
-              },
-              "trial_days": {
+              "total": {
                 "type": "integer"
-              },
-              "requires_license_key": {
-                "type": "boolean"
-              },
-              "license_key_activation_limit": {
-                "type": "integer"
-              },
-              "created_at": {
-                "type": "string"
-              },
-              "deliverables": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/DeliverableDetails"
-                }
               }
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductVariantDetails"
             }
           }
         }
       },
-      "UpdateVariantRequest": {
+      "CreateProductVariantRequest": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string"
           },
-          "price": {
-            "type": "number"
-          },
           "description": {
             "type": "string"
+          },
+          "price": {
+            "type": "number"
           },
           "subscription_interval": {
             "type": "string"
@@ -3679,42 +3797,92 @@
           "license_key_activation_limit": {
             "type": "integer"
           }
-        }
+        },
+        "required": [
+          "name",
+          "price"
+        ]
       },
-      "VariantsList": {
+      "ProductVariantDetails": {
         "type": "object",
         "properties": {
-          "meta": {
-            "type": "object",
-            "properties": {
-              "total": {
-                "type": "integer"
-              }
-            }
+          "id": {
+            "type": "string"
           },
-          "data": {
+          "product_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "subscription_interval": {
+            "type": "string"
+          },
+          "trial_days": {
+            "type": "integer"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "requires_license_key": {
+            "type": "boolean"
+          },
+          "license_key_activation_limit": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deliverables": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/VariantDetails"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "button_label": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
             }
           }
         }
       },
-      "NewVariantRequest": {
+      "UpdateProductVariantRequest": {
         "type": "object",
-        "required": [
-          "name",
-          "price"
-        ],
         "properties": {
           "name": {
             "type": "string"
           },
-          "price": {
-            "type": "integer"
-          },
           "description": {
             "type": "string"
+          },
+          "price": {
+            "type": "number"
           },
           "subscription_interval": {
             "type": "string"
@@ -3761,28 +3929,26 @@
           }
         }
       },
-      "NewProductRequest": {
+      "CreateProductRequest": {
         "type": "object",
-        "required": [
-          "name",
-          "price",
-          "pricing_model"
-        ],
         "properties": {
           "name": {
-            "type": "string"
-          },
-          "price": {
-            "type": "number"
-          },
-          "pricing_model": {
             "type": "string"
           },
           "description": {
             "type": "string"
           },
-          "preview_link": {
-            "type": "string"
+          "pricing_model": {
+            "type": "string",
+            "enum": [
+              "one_time",
+              "subscription",
+              "pay_what_you_want",
+              "tiered"
+            ]
+          },
+          "price": {
+            "type": "integer"
           },
           "status": {
             "type": "string"
@@ -3792,6 +3958,9 @@
           },
           "trial_days": {
             "type": "integer"
+          },
+          "preview_link": {
+            "type": "string"
           },
           "requires_license_key": {
             "type": "boolean"
@@ -3805,47 +3974,12 @@
           "customer_portal_visibility": {
             "type": "string"
           }
-        }
-      },
-      "DeliverableDetails": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "url": {
-            "type": "string"
-          },
-          "button_label": {
-            "type": "string"
-          },
-          "created_at": {
-            "type": "string"
-          }
-        }
-      },
-      "ImageDetails": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "file_url": {
-            "type": "string"
-          },
-          "position": {
-            "type": "integer"
-          }
-        }
+        },
+        "required": [
+          "name",
+          "pricing_model",
+          "price"
+        ]
       },
       "RefundsList": {
         "type": "object",
@@ -3875,6 +4009,9 @@
                 "status": {
                   "type": "string"
                 },
+                "reason": {
+                  "type": "string"
+                },
                 "created": {
                   "type": "string",
                   "format": "date-time"
@@ -3884,70 +4021,7 @@
           }
         }
       },
-      "UsageRecordRequest": {
-        "type": "object",
-        "properties": {
-          "subscription_id": {
-            "type": "string"
-          },
-          "customer_id": {
-            "type": "string"
-          },
-          "meter_event_name": {
-            "type": "string"
-          },
-          "quantity": {
-            "type": "integer"
-          },
-          "action": {
-            "type": "string",
-            "default": "increment"
-          }
-        }
-      },
-      "UsageRecordResponse": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "type": "object",
-            "properties": {
-              "success": {
-                "type": "boolean"
-              }
-            }
-          },
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "store_id": {
-                "type": "string"
-              },
-              "subscription_id": {
-                "type": "string"
-              },
-              "meter_event_name": {
-                "type": "string"
-              },
-              "quantity": {
-                "type": "integer"
-              },
-              "action": {
-                "type": "string"
-              },
-              "stripe_usage_record_id": {
-                "type": "string"
-              },
-              "created_at": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      },
-      "UsageRecordsList": {
+      "SubscriptionInvoicesList": {
         "type": "object",
         "properties": {
           "meta": {
@@ -3955,15 +4029,6 @@
             "properties": {
               "total": {
                 "type": "integer"
-              },
-              "page": {
-                "type": "integer"
-              },
-              "limit": {
-                "type": "integer"
-              },
-              "has_more": {
-                "type": "boolean"
               }
             }
           },
@@ -3975,23 +4040,17 @@
                 "id": {
                   "type": "string"
                 },
-                "store_id": {
+                "status": {
                   "type": "string"
                 },
                 "subscription_id": {
                   "type": "string"
                 },
-                "meter_event_name": {
+                "customer_id": {
                   "type": "string"
                 },
-                "quantity": {
-                  "type": "integer"
-                },
-                "action": {
-                  "type": "string"
-                },
-                "timestamp": {
-                  "type": "string"
+                "amount": {
+                  "type": "number"
                 },
                 "created_at": {
                   "type": "string"
@@ -4001,58 +4060,101 @@
           }
         }
       },
-      "UpdateWebhookRequest": {
-        "type": "object",
-        "properties": {
-          "endpoint_url": {
-            "type": "string"
-          },
-          "events": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "is_active": {
-            "type": "boolean"
-          }
-        }
-      },
-      "WebhookDetails": {
+      "SubscriptionDetails": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string"
           },
-          "endpoint_url": {
+          "store_id": {
             "type": "string"
           },
-          "is_active": {
+          "product_id": {
+            "type": "string"
+          },
+          "variant_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "current_period_end": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "cancel_at_period_end": {
             "type": "boolean"
           },
-          "events": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "metadata": {
+            "type": "object"
           },
           "created_at": {
-            "type": "string"
-          }
-        }
-      },
-      "DeleteWebhookResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "stripe_subscription_id": {
             "type": "string"
           },
-          "deleted": {
-            "type": "boolean"
+          "stripe_customer_id": {
+            "type": "string"
+          },
+          "product": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "pricing_model": {
+                "type": "string"
+              },
+              "subscription_interval": {
+                "type": "string"
+              }
+            }
+          },
+          "variant": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              },
+              "subscription_interval": {
+                "type": "string"
+              }
+            }
           }
         }
       },
-      "WebhooksList": {
+      "UpdateSubscriptionRequest": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "cancel",
+              "cancel_immediately",
+              "resume"
+            ]
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "SubscriptionsList": {
         "type": "object",
         "properties": {
           "meta": {
@@ -4066,76 +4168,8 @@
           "data": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "endpoint_url": {
-                  "type": "string"
-                },
-                "is_active": {
-                  "type": "boolean"
-                },
-                "events": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "created_at": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/components/schemas/SubscriptionDetails"
             }
-          }
-        }
-      },
-      "NewWebhookRequest": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string"
-          },
-          "events": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "NewWebhookResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "endpoint_url": {
-                "type": "string"
-              },
-              "signing_secret": {
-                "type": "string"
-              },
-              "is_active": {
-                "type": "boolean"
-              },
-              "events": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "created_at": {
-                "type": "string"
-              }
-            }
-          },
-          "note": {
-            "type": "string"
           }
         }
       }

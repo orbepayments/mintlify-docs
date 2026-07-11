@@ -11,26 +11,302 @@
     }
   ],
   "paths": {
-    "/v1/portal/sessions": {
-      "post": {
-        "summary": "Create Session",
-        "description": "Creates a customer session token",
+    "/portal/orders": {
+      "get": {
+        "tags": [
+          "Portal"
+        ],
+        "summary": "List customer portal orders",
+        "description": "Fetch a list of all orders associated with a customer authenticated through their portal login. Requires a bearer token in the `Authorization` header to authenticate the customer's access.\n\n- **Responses:**\n  - `200`: Returns a list of orders associated with the customer along with metadata.\n  - `401`: Unauthorized if the Authorization token is not provided or invalid.",
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Portal orders retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortalOrdersList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Customer token required."
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
-    "/v1/portal/orders": {
+    "/refunds": {
       "get": {
-        "summary": "List Orders",
-        "description": "Lists customer orders",
+        "tags": [
+          "Shopper Orders"
+        ],
+        "summary": "List refunds",
+        "description": "Retrieve a list of refunds associated with the store's connected Stripe account. Ensures the store is linked to a Stripe account. Controls the number of refunds fetched by using `limit` as a query parameter.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of refunds to retrieve.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Refunds retrieved successfully.",
+            "content": {
+              "application/json": {
+                "$ref": "#/components/schemas/RefundsList"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Store has no connected Stripe account."
+          },
+          "401": {
+            "description": "Unauthorized - Store ID header missing."
+          },
+          "500": {
+            "description": "Internal Server Error."
           }
-        }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
+      }
+    },
+    "/subscription-invoices": {
+      "get": {
+        "tags": [
+          "Shopper Subscriptions"
+        ],
+        "summary": "List subscription invoices",
+        "description": "Fetch a filtered list of subscription invoices associated with the store specified by `x-store-id`. Supports filtering by `status`, `subscription_id`, and `customer_id`, as well as limiting entries using `limit` parameter.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Maximum number of invoices to return."
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter invoices by status.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subscription_id",
+            "in": "query",
+            "description": "Filter invoices by subscription ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customer_id",
+            "in": "query",
+            "description": "Filter invoices by customer ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Invoices retrieved successfully.",
+            "content": {
+              "application/json": {
+                "$ref": "#/components/schemas/SubscriptionInvoicesList"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Store ID header missing."
+          },
+          "500": {
+            "description": "Internal Server Error."
+          }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
+      }
+    },
+    "/v1/subscriptions/{id}": {
+      "get": {
+        "tags": [
+          "Shopper Subscriptions"
+        ],
+        "summary": "Retrieve subscription details",
+        "description": "Fetches detailed information about a specific subscription using its `id`. Ensures the subscription is linked to the store with `x-store-id`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the subscription to retrieve."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription details retrieved successfully.",
+            "content": {
+              "application/json": {
+                "$ref": "#/components/schemas/SubscriptionDetails"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Store ID header missing."
+          },
+          "404": {
+            "description": "Subscription not found."
+          },
+          "500": {
+            "description": "Internal Server Error."
+          }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Shopper Subscriptions"
+        ],
+        "summary": "Update subscription status",
+        "description": "Modify the status of a subscription using its `id`. Supports actions such as `cancel`, `cancel_immediately`, and `resume`. Requires store authentication with `x-store-id`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the subscription to update."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "$ref": "#/components/schemas/UpdateSubscriptionRequest"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Subscription status updated successfully.",
+            "content": {
+              "application/json": {
+                "$ref": "#/components/schemas/SubscriptionDetails"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid action or conditions not met."
+          },
+          "401": {
+            "description": "Unauthorized - Store ID header missing."
+          },
+          "404": {
+            "description": "Subscription not found."
+          },
+          "500": {
+            "description": "Internal Server Error."
+          }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
+      }
+    },
+    "/subscriptions": {
+      "get": {
+        "tags": [
+          "Shopper Subscriptions"
+        ],
+        "summary": "List all subscriptions",
+        "description": "Retrieve a paginated list of all subscriptions associated with the store using `x-store-id`. Supports filtering by `status`, `customer_id`, and `product_id`, with pagination using `limit` query parameter.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of subscriptions to retrieve.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter subscriptions by status.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customer_id",
+            "in": "query",
+            "description": "Filter subscriptions by customer ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_id",
+            "in": "query",
+            "description": "Filter subscriptions by product ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of subscriptions retrieved successfully.",
+            "content": {
+              "application/json": {
+                "$ref": "#/components/schemas/SubscriptionsList"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Store ID header missing."
+          },
+          "500": {
+            "description": "Internal Server Error."
+          }
+        },
+        "security": [
+          {
+            "storeIdHeader": []
+          }
+        ]
       }
     }
   },
@@ -47,7 +323,7 @@
       }
     },
     "schemas": {
-      "RecoveryResponse": {
+      "CartRecoveryResponse": {
         "type": "object",
         "properties": {
           "data": {
@@ -97,7 +373,8 @@
             "type": "integer"
           },
           "created_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           },
           "stripe_checkout_session_id": {
             "type": "string"
@@ -143,27 +420,16 @@
           }
         }
       },
-      "RecoverCartRequest": {
+      "TriggerRecoveryEmailRequest": {
         "type": "object",
-        "required": [
-          "cart_id"
-        ],
         "properties": {
           "cart_id": {
             "type": "string"
           }
-        }
-      },
-      "TriggerResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
+        },
+        "required": [
+          "cart_id"
+        ]
       },
       "AffiliateConversions": {
         "type": "object",
@@ -209,7 +475,8 @@
                   "type": "string"
                 },
                 "created_at": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "customer": {
                   "type": "object",
@@ -257,7 +524,8 @@
             "type": "string"
           },
           "created_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           },
           "affiliate": {
             "type": "object",
@@ -272,10 +540,7 @@
                 "type": "string"
               },
               "social_links": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
+                "type": "string"
               }
             }
           },
@@ -298,42 +563,30 @@
           }
         }
       },
-      "AffiliateUpdateRequest": {
+      "UpdateAffiliateRequest": {
         "type": "object",
         "properties": {
           "status": {
             "type": "string"
           }
-        }
-      },
-      "AffiliateInviteRequest": {
-        "type": "object",
+        },
         "required": [
-          "email"
-        ],
+          "status"
+        ]
+      },
+      "InviteAffiliateRequest": {
+        "type": "object",
         "properties": {
           "email": {
             "type": "string"
           }
-        }
-      },
-      "InviteResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      },
-      "TrackingLinkRequest": {
-        "type": "object",
+        },
         "required": [
-          "membership_id",
-          "code"
-        ],
+          "email"
+        ]
+      },
+      "GenerateTrackingLinkRequest": {
+        "type": "object",
         "properties": {
           "membership_id": {
             "type": "string"
@@ -341,24 +594,20 @@
           "code": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "membership_id",
+          "code"
+        ]
       },
-      "TrackingLinkResponse": {
+      "TrackingLink": {
         "type": "object",
         "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "membership_id": {
-                "type": "string"
-              },
-              "code": {
-                "type": "string"
-              }
-            }
+          "membership_id": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
           }
         }
       },
@@ -390,22 +639,27 @@
           }
         }
       },
-      "MembershipUpdateRequest": {
+      "UpdateAffiliateMembershipStatusRequest": {
         "type": "object",
-        "required": [
-          "membership_id",
-          "action"
-        ],
         "properties": {
           "membership_id": {
             "type": "string"
           },
           "action": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "approve",
+              "reject",
+              "ban"
+            ]
           }
-        }
+        },
+        "required": [
+          "membership_id",
+          "action"
+        ]
       },
-      "AudienceMemberDetails": {
+      "AudienceMember": {
         "type": "object",
         "properties": {
           "id": {
@@ -427,11 +681,12 @@
             "type": "number"
           },
           "created_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
-      "AudienceUpdateRequest": {
+      "UpdateAudienceMemberRequest": {
         "type": "object",
         "properties": {
           "name": {
@@ -440,20 +695,26 @@
           "status": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "status"
+        ]
       },
-      "UnsubscribeResponse": {
+      "UnsubscribeAudienceResponse": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string"
           },
           "status": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "unsubscribed"
+            ]
           }
         }
       },
-      "AudienceBroadcastsList": {
+      "BroadcastsList": {
         "type": "object",
         "properties": {
           "meta": {
@@ -500,24 +761,20 @@
                   "type": "object"
                 },
                 "sent_at": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "created_at": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 }
               }
             }
           }
         }
       },
-      "BroadcastRequest": {
+      "SendBroadcastRequest": {
         "type": "object",
-        "required": [
-          "name",
-          "subject",
-          "html",
-          "recipients_type"
-        ],
         "properties": {
           "name": {
             "type": "string"
@@ -535,7 +792,13 @@
               "repeat_customers"
             ]
           }
-        }
+        },
+        "required": [
+          "name",
+          "subject",
+          "html",
+          "recipients_type"
+        ]
       },
       "BroadcastResponse": {
         "type": "object",
@@ -559,7 +822,7 @@
           }
         }
       },
-      "AudienceList": {
+      "AudienceContactsList": {
         "type": "object",
         "properties": {
           "meta": {
@@ -582,12 +845,12 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/AudienceMemberDetails"
+              "$ref": "#/components/schemas/AudienceMember"
             }
           }
         }
       },
-      "TaggedCustomerList": {
+      "TaggedCustomersList": {
         "type": "object",
         "properties": {
           "meta": {
@@ -622,7 +885,8 @@
                   "type": "string"
                 },
                 "created_at": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "metadata": {
                   "type": "object"
@@ -634,10 +898,6 @@
       },
       "AddTagRequest": {
         "type": "object",
-        "required": [
-          "customer_id",
-          "tag"
-        ],
         "properties": {
           "customer_id": {
             "type": "string"
@@ -645,14 +905,14 @@
           "tag": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "customer_id",
+          "tag"
+        ]
       },
       "RemoveTagRequest": {
         "type": "object",
-        "required": [
-          "customer_id",
-          "tag"
-        ],
         "properties": {
           "customer_id": {
             "type": "string"
@@ -660,9 +920,13 @@
           "tag": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "customer_id",
+          "tag"
+        ]
       },
-      "TagResponse": {
+      "TagUpdateResponse": {
         "type": "object",
         "properties": {
           "data": {
@@ -681,7 +945,7 @@
           }
         }
       },
-      "BalanceResponse": {
+      "StoreBalance": {
         "type": "object",
         "properties": {
           "data": {
@@ -753,7 +1017,8 @@
             "type": "number"
           },
           "created_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           },
           "deliverables": {
             "type": "array",
@@ -829,35 +1094,147 @@
       },
       "CreateBumpRequest": {
         "type": "object",
-        "required": [
-          "title",
-          "price"
-        ],
         "properties": {
           "title": {
             "type": "string"
           },
+          "price": {
+            "type": "number"
+          },
           "description": {
             "type": "string"
           },
-          "price": {
-            "type": "integer"
-          },
           "badge_title": {
-            "type": "string",
-            "default": "Addon"
+            "type": "string"
           },
           "badge_color": {
-            "type": "string",
-            "default": "green"
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "price"
+        ]
+      },
+      "CheckoutLinksList": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer"
+              },
+              "page": {
+                "type": "integer"
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "has_more": {
+                "type": "boolean"
+              }
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CheckoutLinkDetails"
+            }
           }
         }
       },
-      "CreateCheckoutRequest": {
+      "CreateCheckoutLinkRequest": {
         "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "design": {
+            "type": "object"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
         "required": [
-          "product_id"
-        ],
+          "name"
+        ]
+      },
+      "CheckoutLinkDetails": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "store_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "design": {
+            "type": "object"
+          },
+          "status": {
+            "type": "string"
+          },
+          "views": {
+            "type": "integer"
+          },
+          "sales": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UpdateCheckoutLinkRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "design": {
+            "type": "object"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "CheckoutSessionsList": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer"
+              },
+              "page": {
+                "type": "integer"
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "has_more": {
+                "type": "boolean"
+              }
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CheckoutSessionDetails"
+            }
+          }
+        }
+      },
+      "CreateCheckoutSessionRequest": {
+        "type": "object",
         "properties": {
           "product_id": {
             "type": "string"
@@ -875,10 +1252,7 @@
             "type": "string"
           },
           "splits": {
-            "type": "array",
-            "items": {
-              "type": "object"
-            }
+            "type": "object"
           },
           "success_url": {
             "type": "string"
@@ -895,9 +1269,12 @@
           "metadata": {
             "type": "object"
           }
-        }
+        },
+        "required": [
+          "product_id"
+        ]
       },
-      "CheckoutSession": {
+      "CheckoutSessionDetails": {
         "type": "object",
         "properties": {
           "id": {
@@ -925,14 +1302,15 @@
             "type": "string"
           },
           "variant_id": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "expires_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           },
           "created_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -967,14 +1345,19 @@
                 "used_credits": {
                   "type": "integer"
                 },
+                "remaining_credits": {
+                  "type": "integer"
+                },
                 "rollover_unused": {
                   "type": "boolean"
                 },
                 "created_at": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "updated_at": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "meter": {
                   "type": "object",
@@ -992,16 +1375,13 @@
                       "type": "string"
                     }
                   }
-                },
-                "remaining_credits": {
-                  "type": "integer"
                 }
               }
             }
           }
         }
       },
-      "CustomerOrders": {
+      "CustomerOrdersList": {
         "type": "object",
         "properties": {
           "meta": {
@@ -1051,7 +1431,8 @@
                   "type": "string"
                 },
                 "created_at": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "product": {
                   "type": "object",
@@ -1094,61 +1475,58 @@
       "CustomerDetails": {
         "type": "object",
         "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "store_id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              },
-              "status": {
-                "type": "string"
-              },
-              "total_orders": {
-                "type": "integer"
-              },
-              "lifetime_revenue": {
-                "type": "number"
-              },
-              "metadata": {
-                "type": "object"
-              },
-              "created_at": {
-                "type": "string"
-              },
-              "orders": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string"
-                    },
-                    "status": {
-                      "type": "string"
-                    },
-                    "amount": {
-                      "type": "number"
-                    },
-                    "created_at": {
-                      "type": "string"
-                    }
-                  }
+          "id": {
+            "type": "string"
+          },
+          "store_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "total_orders": {
+            "type": "integer"
+          },
+          "lifetime_revenue": {
+            "type": "number"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "orders": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "number"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
                 }
               }
             }
           }
         }
       },
-      "CustomerUpdateRequest": {
+      "UpdateCustomerRequest": {
         "type": "object",
         "properties": {
           "name": {
@@ -1191,13 +1569,15 @@
                   "type": "string"
                 },
                 "current_period_end": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "cancel_at_period_end": {
                   "type": "boolean"
                 },
                 "created_at": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "product": {
                   "type": "object",
@@ -1215,7 +1595,7 @@
           }
         }
       },
-      "CustomerList": {
+      "CustomersListResponse": {
         "type": "object",
         "properties": {
           "meta": {
@@ -1243,11 +1623,8 @@
           }
         }
       },
-      "NewCustomerRequest": {
+      "CreateCustomerRequest": {
         "type": "object",
-        "required": [
-          "email"
-        ],
         "properties": {
           "name": {
             "type": "string"
@@ -1255,55 +1632,52 @@
           "email": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "email"
+        ]
       },
       "DiscountDetails": {
         "type": "object",
         "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "store_id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "code": {
-                "type": "string"
-              },
-              "discount_type": {
-                "type": "string"
-              },
-              "discount_amount": {
-                "type": "number"
-              },
-              "status": {
-                "type": "string"
-              },
-              "max_redemptions": {
-                "type": "integer"
-              },
-              "starts_at": {
-                "type": "string"
-              },
-              "expires_at": {
-                "type": "string"
-              },
-              "product_ids": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "discount_type": {
+            "type": "string"
+          },
+          "discount_amount": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          },
+          "max_redemptions": {
+            "type": "integer"
+          },
+          "starts_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "product_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           }
         }
       },
-      "DiscountUpdateRequest": {
+      "UpdateDiscountRequest": {
         "type": "object",
         "properties": {
           "name": {
@@ -1325,10 +1699,12 @@
             "type": "integer"
           },
           "starts_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           },
           "expires_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           },
           "product_ids": {
             "type": "array",
@@ -1338,58 +1714,8 @@
           }
         }
       },
-      "DeleteDiscountResponse": {
+      "CreateDiscountRequest": {
         "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "deleted": {
-                "type": "boolean"
-              }
-            }
-          }
-        }
-      },
-      "DiscountsList": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "type": "object",
-            "properties": {
-              "total": {
-                "type": "integer"
-              },
-              "page": {
-                "type": "integer"
-              },
-              "limit": {
-                "type": "integer"
-              },
-              "has_more": {
-                "type": "boolean"
-              }
-            }
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DiscountDetails"
-            }
-          }
-        }
-      },
-      "NewDiscountRequest": {
-        "type": "object",
-        "required": [
-          "name",
-          "code",
-          "discount_type",
-          "discount_amount"
-        ],
         "properties": {
           "name": {
             "type": "string"
@@ -1427,9 +1753,54 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "required": [
+          "name",
+          "code",
+          "discount_type",
+          "discount_amount"
+        ]
+      },
+      "DeleteDiscountResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "deleted": {
+            "type": "boolean"
+          }
         }
       },
-      "DisputesList": {
+      "DiscountsListResponse": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer"
+              },
+              "page": {
+                "type": "integer"
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "has_more": {
+                "type": "boolean"
+              }
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscountDetails"
+            }
+          }
+        }
+      },
+      "DisputesListResponse": {
         "type": "object",
         "properties": {
           "meta": {
@@ -1469,12 +1840,8 @@
           }
         }
       },
-      "EmailBroadcastRequest": {
+      "BroadcastEmailRequest": {
         "type": "object",
-        "required": [
-          "subject",
-          "html"
-        ],
         "properties": {
           "subject": {
             "type": "string"
@@ -1490,7 +1857,7 @@
           }
         }
       },
-      "EmailBroadcastResponse": {
+      "BroadcastEmailResponse": {
         "type": "object",
         "properties": {
           "success": {
@@ -1504,37 +1871,6 @@
             "items": {
               "type": "string"
             }
-          }
-        }
-      },
-      "EventTrackingRequest": {
-        "type": "object",
-        "required": [
-          "eventName"
-        ],
-        "properties": {
-          "eventName": {
-            "type": "string"
-          },
-          "eventData": {
-            "type": "object"
-          },
-          "url": {
-            "type": "string"
-          },
-          "referrer": {
-            "type": "string"
-          }
-        }
-      },
-      "EventTrackingResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string"
           }
         }
       },
@@ -1589,7 +1925,8 @@
             "type": "string"
           },
           "created_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           },
           "product_id": {
             "type": "string"
@@ -1632,7 +1969,37 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/FileDetails"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "product_id": {
+                  "type": "string"
+                },
+                "variant_id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "button_label": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
             }
           }
         }
@@ -1641,91 +2008,99 @@
         "type": "object",
         "properties": {
           "data": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            }
           }
         }
       },
       "LicenseKeyDetails": {
         "type": "object",
         "properties": {
-          "data": {
+          "id": {
+            "type": "string"
+          },
+          "store_id": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "activations": {
+            "type": "integer"
+          },
+          "activation_limit": {
+            "type": "integer"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "product": {
             "type": "object",
             "properties": {
               "id": {
                 "type": "string"
               },
-              "store_id": {
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "customer": {
+            "type": "object",
+            "properties": {
+              "id": {
                 "type": "string"
               },
-              "key": {
+              "name": {
                 "type": "string"
               },
-              "status": {
+              "email": {
+                "type": "string"
+              }
+            }
+          },
+          "order": {
+            "type": "object",
+            "properties": {
+              "id": {
                 "type": "string"
               },
-              "activations": {
-                "type": "integer"
-              },
-              "activation_limit": {
-                "type": "integer"
-              },
-              "expires_at": {
-                "type": "string"
+              "amount": {
+                "type": "number"
               },
               "created_at": {
-                "type": "string"
-              },
-              "updated_at": {
-                "type": "string"
-              },
-              "product": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "name": {
-                    "type": "string"
-                  }
-                }
-              },
-              "customer": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "email": {
-                    "type": "string"
-                  }
-                }
-              },
-              "order": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "amount": {
-                    "type": "number"
-                  },
-                  "created_at": {
-                    "type": "string"
-                  }
-                }
+                "type": "string",
+                "format": "date-time"
               }
             }
           }
         }
       },
-      "LicenseKeyUpdateRequest": {
+      "UpdateLicenseKeyRequest": {
         "type": "object",
         "properties": {
           "expires_at": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           },
           "activation_limit": {
             "type": "integer"
@@ -1741,9 +2116,12 @@
           "license_key": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "license_key"
+        ]
       },
-      "ActivateLicenseKeyResponse": {
+      "LicenseKeyActivationResponse": {
         "type": "object",
         "properties": {
           "activated": {
@@ -1765,16 +2143,227 @@
           }
         }
       },
-      "RefundRequest": {
+      "LicenseKeysList": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer"
+              }
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LicenseKeyDetails"
+            }
+          }
+        }
+      },
+      "ValidateLicenseKeyRequest": {
+        "type": "object",
+        "properties": {
+          "license_key": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "license_key"
+        ]
+      },
+      "LicenseKeyValidationResponse": {
+        "type": "object",
+        "properties": {
+          "valid": {
+            "type": "boolean"
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "activations": {
+                "type": "integer"
+              },
+              "activation_limit": {
+                "type": "integer"
+              },
+              "expires_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "customer_id": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "MeterDetails": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "store_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UpdateMeterRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          }
+        }
+      },
+      "MetersList": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer"
+              },
+              "page": {
+                "type": "integer"
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "has_more": {
+                "type": "boolean"
+              }
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MeterDetails"
+            }
+          }
+        }
+      },
+      "CreateMeterRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "event_name": {
+            "type": "string"
+          },
+          "aggregation_type": {
+            "type": "string",
+            "enum": [
+              "sum",
+              "count",
+              "max",
+              "latest"
+            ]
+          },
+          "unit": {
+            "type": "string",
+            "default": "unit"
+          }
+        },
+        "required": [
+          "name",
+          "event_name",
+          "aggregation_type"
+        ]
+      },
+      "MetricsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "period": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "end": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              },
+              "orders": {
+                "type": "object",
+                "properties": {
+                  "count": {
+                    "type": "integer"
+                  },
+                  "gross_revenue": {
+                    "type": "number"
+                  },
+                  "net_revenue": {
+                    "type": "number"
+                  }
+                }
+              },
+              "subscriptions": {
+                "type": "object",
+                "properties": {
+                  "active": {
+                    "type": "integer"
+                  },
+                  "mrr": {
+                    "type": "number"
+                  },
+                  "arr": {
+                    "type": "number"
+                  }
+                }
+              },
+              "customers": {
+                "type": "object",
+                "properties": {
+                  "new_in_period": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "RefundOrderRequest": {
         "type": "object",
         "properties": {
           "amount": {
             "type": "integer",
-            "description": "The amount to refund in cents."
+            "description": "Amount to refund in cents if partial refund is desired."
           },
           "reason": {
             "type": "string",
-            "description": "The reason for the refund."
+            "description": "Reason for the refund. Defaults to 'requested_by_customer'."
           }
         }
       },
@@ -1800,110 +2389,8 @@
                 "type": "string"
               },
               "created_at": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      },
-      "OrderDetails": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "store_id": {
-                "type": "string"
-              },
-              "status": {
-                "type": "string"
-              },
-              "amount": {
-                "type": "integer"
-              },
-              "net_amount": {
-                "type": "integer"
-              },
-              "tax_amount": {
-                "type": "integer"
-              },
-              "tax_breakdown": {
-                "type": "object"
-              },
-              "customer_country": {
-                "type": "string"
-              },
-              "business_name": {
-                "type": "string"
-              },
-              "customer_tax_id": {
-                "type": "string"
-              },
-              "is_recovery_conversion": {
-                "type": "boolean"
-              },
-              "created_at": {
-                "type": "string"
-              },
-              "product_id": {
-                "type": "string"
-              },
-              "variant_id": {
-                "type": "string"
-              },
-              "subscription_id": {
-                "type": "string"
-              },
-              "affiliate_membership_id": {
-                "type": "string"
-              },
-              "affiliate_commission_cents": {
-                "type": "integer"
-              },
-              "affiliate_payout_status": {
-                "type": "string"
-              },
-              "metadata": {
-                "type": "object"
-              },
-              "customer": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "email": {
-                    "type": "string"
-                  }
-                }
-              },
-              "product": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "name": {
-                    "type": "string"
-                  }
-                }
-              },
-              "variant": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "name": {
-                    "type": "string"
-                  }
-                }
+                "type": "string",
+                "format": "date-time"
               }
             }
           }
@@ -1923,108 +2410,181 @@
           "data": {
             "type": "array",
             "items": {
+              "$ref": "#/components/schemas/OrderDetails"
+            }
+          }
+        }
+      },
+      "OrderDetails": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "store_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "net_amount": {
+            "type": "number"
+          },
+          "tax_amount": {
+            "type": "number"
+          },
+          "tax_breakdown": {
+            "type": "object"
+          },
+          "customer_country": {
+            "type": "string"
+          },
+          "business_name": {
+            "type": "string"
+          },
+          "customer_tax_id": {
+            "type": "string"
+          },
+          "is_recovery_conversion": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "customer": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              }
+            }
+          },
+          "order_items": {
+            "type": "array",
+            "items": {
               "type": "object",
               "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "store_id": {
-                  "type": "string"
-                },
                 "product_id": {
                   "type": "string"
                 },
                 "variant_id": {
                   "type": "string"
                 },
-                "customer_id": {
-                  "type": "string"
+                "price": {
+                  "type": "number"
                 },
-                "status": {
-                  "type": "string"
-                },
-                "amount": {
+                "quantity": {
                   "type": "integer"
-                },
-                "net_amount": {
-                  "type": "integer"
-                },
-                "tax_amount": {
-                  "type": "integer"
-                },
-                "tax_breakdown": {
-                  "type": "object"
-                },
-                "is_recovery_conversion": {
-                  "type": "boolean"
-                },
-                "customer_country": {
-                  "type": "string"
-                },
-                "business_name": {
-                  "type": "string"
-                },
-                "customer_tax_id": {
-                  "type": "string"
-                },
-                "created_at": {
-                  "type": "string"
-                },
-                "subscription_id": {
-                  "type": "string"
-                },
-                "affiliate_membership_id": {
-                  "type": "string"
-                },
-                "affiliate_commission_cents": {
-                  "type": "integer"
-                },
-                "affiliate_payout_status": {
-                  "type": "string"
-                },
-                "metadata": {
-                  "type": "object"
-                },
-                "customer": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string"
-                    },
-                    "email": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "order_items": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "product_id": {
-                        "type": "string"
-                      },
-                      "variant_id": {
-                        "type": "string"
-                      },
-                      "price": {
-                        "type": "integer"
-                      },
-                      "quantity": {
-                        "type": "integer"
-                      }
-                    }
-                  }
                 }
               }
             }
           }
         }
       },
-      "OrganizationMembersList": {
+      "OrganizationDetails": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "organization_name": {
+            "type": "string"
+          },
+          "billing_email": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "OrganizationsList": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer"
+              },
+              "page": {
+                "type": "integer"
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "has_more": {
+                "type": "boolean"
+              }
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganizationDetails"
+            }
+          }
+        }
+      },
+      "CreateOrganizationRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "organization_name": {
+            "type": "string"
+          },
+          "billing_email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "organization_name"
+        ]
+      },
+      "UpdateOrganizationRequest": {
+        "type": "object",
+        "properties": {
+          "organization_name": {
+            "type": "string"
+          },
+          "billing_email": {
+            "type": "string"
+          }
+        }
+      },
+      "AddOrganizationMemberRequest": {
+        "type": "object",
+        "properties": {
+          "seat_id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "seat_id",
+          "email"
+        ]
+      },
+      "OrganizationMembersResponse": {
         "type": "object",
         "properties": {
           "data": {
@@ -2045,19 +2605,24 @@
                   "type": "string"
                 },
                 "created_at": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "customer_members": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string"
-                    },
-                    "email": {
-                      "type": "string"
-                    },
-                    "created_at": {
-                      "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
                     }
                   }
                 }
@@ -2066,133 +2631,184 @@
           }
         }
       },
-      "AssignSeatRequest": {
+      "PayoutsList": {
         "type": "object",
         "properties": {
-          "seat_id": {
-            "type": "string",
-            "description": "The ID of the seat to assign."
+          "meta": {
+            "type": "object",
+            "properties": {
+              "has_more": {
+                "type": "boolean"
+              }
+            }
           },
-          "email": {
-            "type": "string",
-            "description": "The member's email address."
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "integer"
+                },
+                "currency": {
+                  "type": "string"
+                },
+                "payout_date": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
           }
         }
       },
-      "AssignSeatResponse": {
+      "PortalOrdersList": {
         "type": "object",
         "properties": {
-          "success": {
-            "type": "boolean"
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer"
+              }
+            }
           },
-          "message": {
-            "type": "string"
-          }
-        }
-      },
-      "OrganizationDetails": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "organization_name": {
-            "type": "string"
-          },
-          "billing_email": {
-            "type": "string"
-          },
-          "created_at": {
-            "type": "string"
-          }
-        }
-      },
-      "UpdateOrganizationRequest": {
-        "type": "object",
-        "properties": {
-          "organization_name": {
-            "type": "string",
-            "description": "The new organization name."
-          },
-          "billing_email": {
-            "type": "string",
-            "description": "The new billing email."
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "order_id": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "number"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
           }
         }
       },
       "ProductDetails": {
         "type": "object",
         "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "store_id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "description": {
-                "type": "string"
-              },
-              "preview_link": {
-                "type": "string"
-              },
-              "pricing_model": {
-                "type": "string"
-              },
-              "price": {
-                "type": "number"
-              },
-              "currency": {
-                "type": "string"
-              },
-              "status": {
-                "type": "string"
-              },
-              "created_at": {
-                "type": "string"
-              },
-              "subscription_interval": {
-                "type": "string"
-              },
-              "trial_days": {
-                "type": "integer"
-              },
-              "requires_license_key": {
-                "type": "boolean"
-              },
-              "license_key_activation_limit": {
-                "type": "integer"
-              },
-              "cart_recovery_enabled": {
-                "type": "boolean"
-              },
-              "customer_portal_visibility": {
-                "type": "string"
-              },
-              "variants": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/VariantDetails"
+          "id": {
+            "type": "string"
+          },
+          "store_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "preview_link": {
+            "type": "string"
+          },
+          "pricing_model": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "subscription_interval": {
+            "type": "string"
+          },
+          "trial_days": {
+            "type": "integer"
+          },
+          "pricing_tiers": {
+            "type": "string"
+          },
+          "package_size": {
+            "type": "integer"
+          },
+          "metered_prices": {
+            "type": "string"
+          },
+          "requires_license_key": {
+            "type": "boolean"
+          },
+          "license_key_activation_limit": {
+            "type": "integer"
+          },
+          "cart_recovery_enabled": {
+            "type": "boolean"
+          },
+          "customer_portal_visibility": {
+            "type": "boolean"
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductVariantDetails"
+            }
+          },
+          "deliverables": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "button_label": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
                 }
-              },
-              "deliverables": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/DeliverableDetails"
-                }
-              },
-              "images": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ImageDetails"
+              }
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "file_url": {
+                  "type": "string"
+                },
+                "position": {
+                  "type": "integer"
                 }
               }
             }
@@ -2224,7 +2840,7 @@
             "type": "boolean"
           },
           "customer_portal_visibility": {
-            "type": "string"
+            "type": "boolean"
           },
           "preview_link": {
             "type": "string"
@@ -2234,66 +2850,36 @@
           }
         }
       },
-      "VariantDetails": {
+      "ProductVariantsList": {
         "type": "object",
         "properties": {
-          "data": {
+          "meta": {
             "type": "object",
             "properties": {
-              "id": {
-                "type": "string"
-              },
-              "product_id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "description": {
-                "type": "string"
-              },
-              "price": {
-                "type": "number"
-              },
-              "is_active": {
-                "type": "boolean"
-              },
-              "subscription_interval": {
-                "type": "string"
-              },
-              "trial_days": {
+              "total": {
                 "type": "integer"
-              },
-              "requires_license_key": {
-                "type": "boolean"
-              },
-              "license_key_activation_limit": {
-                "type": "integer"
-              },
-              "created_at": {
-                "type": "string"
-              },
-              "deliverables": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/DeliverableDetails"
-                }
               }
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductVariantDetails"
             }
           }
         }
       },
-      "UpdateVariantRequest": {
+      "CreateProductVariantRequest": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string"
           },
-          "price": {
-            "type": "number"
-          },
           "description": {
             "type": "string"
+          },
+          "price": {
+            "type": "number"
           },
           "subscription_interval": {
             "type": "string"
@@ -2310,42 +2896,92 @@
           "license_key_activation_limit": {
             "type": "integer"
           }
-        }
+        },
+        "required": [
+          "name",
+          "price"
+        ]
       },
-      "VariantsList": {
+      "ProductVariantDetails": {
         "type": "object",
         "properties": {
-          "meta": {
-            "type": "object",
-            "properties": {
-              "total": {
-                "type": "integer"
-              }
-            }
+          "id": {
+            "type": "string"
           },
-          "data": {
+          "product_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "subscription_interval": {
+            "type": "string"
+          },
+          "trial_days": {
+            "type": "integer"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "requires_license_key": {
+            "type": "boolean"
+          },
+          "license_key_activation_limit": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deliverables": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/VariantDetails"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "button_label": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
             }
           }
         }
       },
-      "NewVariantRequest": {
+      "UpdateProductVariantRequest": {
         "type": "object",
-        "required": [
-          "name",
-          "price"
-        ],
         "properties": {
           "name": {
             "type": "string"
           },
-          "price": {
-            "type": "integer"
-          },
           "description": {
             "type": "string"
+          },
+          "price": {
+            "type": "number"
           },
           "subscription_interval": {
             "type": "string"
@@ -2392,28 +3028,26 @@
           }
         }
       },
-      "NewProductRequest": {
+      "CreateProductRequest": {
         "type": "object",
-        "required": [
-          "name",
-          "price",
-          "pricing_model"
-        ],
         "properties": {
           "name": {
-            "type": "string"
-          },
-          "price": {
-            "type": "number"
-          },
-          "pricing_model": {
             "type": "string"
           },
           "description": {
             "type": "string"
           },
-          "preview_link": {
-            "type": "string"
+          "pricing_model": {
+            "type": "string",
+            "enum": [
+              "one_time",
+              "subscription",
+              "pay_what_you_want",
+              "tiered"
+            ]
+          },
+          "price": {
+            "type": "integer"
           },
           "status": {
             "type": "string"
@@ -2423,6 +3057,9 @@
           },
           "trial_days": {
             "type": "integer"
+          },
+          "preview_link": {
+            "type": "string"
           },
           "requires_license_key": {
             "type": "boolean"
@@ -2436,47 +3073,12 @@
           "customer_portal_visibility": {
             "type": "string"
           }
-        }
-      },
-      "DeliverableDetails": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "url": {
-            "type": "string"
-          },
-          "button_label": {
-            "type": "string"
-          },
-          "created_at": {
-            "type": "string"
-          }
-        }
-      },
-      "ImageDetails": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "file_url": {
-            "type": "string"
-          },
-          "position": {
-            "type": "integer"
-          }
-        }
+        },
+        "required": [
+          "name",
+          "pricing_model",
+          "price"
+        ]
       },
       "RefundsList": {
         "type": "object",
@@ -2506,6 +3108,9 @@
                 "status": {
                   "type": "string"
                 },
+                "reason": {
+                  "type": "string"
+                },
                 "created": {
                   "type": "string",
                   "format": "date-time"
@@ -2515,70 +3120,7 @@
           }
         }
       },
-      "UsageRecordRequest": {
-        "type": "object",
-        "properties": {
-          "subscription_id": {
-            "type": "string"
-          },
-          "customer_id": {
-            "type": "string"
-          },
-          "meter_event_name": {
-            "type": "string"
-          },
-          "quantity": {
-            "type": "integer"
-          },
-          "action": {
-            "type": "string",
-            "default": "increment"
-          }
-        }
-      },
-      "UsageRecordResponse": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "type": "object",
-            "properties": {
-              "success": {
-                "type": "boolean"
-              }
-            }
-          },
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "store_id": {
-                "type": "string"
-              },
-              "subscription_id": {
-                "type": "string"
-              },
-              "meter_event_name": {
-                "type": "string"
-              },
-              "quantity": {
-                "type": "integer"
-              },
-              "action": {
-                "type": "string"
-              },
-              "stripe_usage_record_id": {
-                "type": "string"
-              },
-              "created_at": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      },
-      "UsageRecordsList": {
+      "SubscriptionInvoicesList": {
         "type": "object",
         "properties": {
           "meta": {
@@ -2586,15 +3128,6 @@
             "properties": {
               "total": {
                 "type": "integer"
-              },
-              "page": {
-                "type": "integer"
-              },
-              "limit": {
-                "type": "integer"
-              },
-              "has_more": {
-                "type": "boolean"
               }
             }
           },
@@ -2606,23 +3139,17 @@
                 "id": {
                   "type": "string"
                 },
-                "store_id": {
+                "status": {
                   "type": "string"
                 },
                 "subscription_id": {
                   "type": "string"
                 },
-                "meter_event_name": {
+                "customer_id": {
                   "type": "string"
                 },
-                "quantity": {
-                  "type": "integer"
-                },
-                "action": {
-                  "type": "string"
-                },
-                "timestamp": {
-                  "type": "string"
+                "amount": {
+                  "type": "number"
                 },
                 "created_at": {
                   "type": "string"
@@ -2632,58 +3159,101 @@
           }
         }
       },
-      "UpdateWebhookRequest": {
-        "type": "object",
-        "properties": {
-          "endpoint_url": {
-            "type": "string"
-          },
-          "events": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "is_active": {
-            "type": "boolean"
-          }
-        }
-      },
-      "WebhookDetails": {
+      "SubscriptionDetails": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string"
           },
-          "endpoint_url": {
+          "store_id": {
             "type": "string"
           },
-          "is_active": {
+          "product_id": {
+            "type": "string"
+          },
+          "variant_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "current_period_end": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "cancel_at_period_end": {
             "type": "boolean"
           },
-          "events": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "metadata": {
+            "type": "object"
           },
           "created_at": {
-            "type": "string"
-          }
-        }
-      },
-      "DeleteWebhookResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "stripe_subscription_id": {
             "type": "string"
           },
-          "deleted": {
-            "type": "boolean"
+          "stripe_customer_id": {
+            "type": "string"
+          },
+          "product": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "pricing_model": {
+                "type": "string"
+              },
+              "subscription_interval": {
+                "type": "string"
+              }
+            }
+          },
+          "variant": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              },
+              "subscription_interval": {
+                "type": "string"
+              }
+            }
           }
         }
       },
-      "WebhooksList": {
+      "UpdateSubscriptionRequest": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "cancel",
+              "cancel_immediately",
+              "resume"
+            ]
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "SubscriptionsList": {
         "type": "object",
         "properties": {
           "meta": {
@@ -2697,76 +3267,8 @@
           "data": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "endpoint_url": {
-                  "type": "string"
-                },
-                "is_active": {
-                  "type": "boolean"
-                },
-                "events": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "created_at": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/components/schemas/SubscriptionDetails"
             }
-          }
-        }
-      },
-      "NewWebhookRequest": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string"
-          },
-          "events": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "NewWebhookResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "endpoint_url": {
-                "type": "string"
-              },
-              "signing_secret": {
-                "type": "string"
-              },
-              "is_active": {
-                "type": "boolean"
-              },
-              "events": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "created_at": {
-                "type": "string"
-              }
-            }
-          },
-          "note": {
-            "type": "string"
           }
         }
       }
