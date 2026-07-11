@@ -773,7 +773,7 @@
     "/files/{id}/download": {
       "get": {
         "tags": [
-          "Files"
+          "Deliverables"
         ],
         "summary": "Download file via pre-signed URL",
         "description": "Generate a pre-signed URL to download a file from the store's storage on Cloudflare R2. The endpoint validates that the file exists and belongs to the store using the `x-store-id` header. You may specify the `expires_in` query parameter to control the URL's validity period, up to a maximum of 24 hours.",
@@ -819,7 +819,7 @@
     "/files/{id}": {
       "get": {
         "tags": [
-          "Files"
+          "Deliverables"
         ],
         "summary": "Retrieve file details",
         "description": "Fetch detailed information about a specific file deliverable, ensuring that it belongs to the store by verifying the `x-store-id` header. Returns metadata such as title, description, and associated product details.",
@@ -854,7 +854,7 @@
       },
       "delete": {
         "tags": [
-          "Files"
+          "Deliverables"
         ],
         "summary": "Delete a file deliverable",
         "description": "Delete a file from the store's records. The endpoint checks if the file exists and is associated with the store using the `x-store-id` header before deletion.",
@@ -891,7 +891,7 @@
     "/files": {
       "get": {
         "tags": [
-          "Files"
+          "Deliverables"
         ],
         "summary": "List all files",
         "description": "Retrieve a list of all files associated with a store. Supports filtering by product and variant IDs, along with pagination via the `limit` parameter.",
@@ -943,7 +943,7 @@
     "/license-keys/{id}/revoke": {
       "post": {
         "tags": [
-          "License Keys"
+          "Deliverables"
         ],
         "summary": "Revoke a license key",
         "description": "Permanently disable a specific license key, ensuring it belongs to the store. Checks the key's current status and updates it to 'revoked'. If the key is already revoked, a bad request error is returned.",
@@ -980,7 +980,7 @@
     "/license-keys/{id}": {
       "get": {
         "tags": [
-          "License Keys"
+          "Deliverables"
         ],
         "summary": "Retrieve License Key Details",
         "description": "This endpoint fetches detailed information about a specific license key using the provided `id` path parameter. The request requires verification via the `x-store-id` header to ensure that the key is associated with the correct store. It returns detailed information including the key status, product details, customer information, and associated order data.",
@@ -1021,7 +1021,7 @@
       },
       "patch": {
         "tags": [
-          "License Keys"
+          "Deliverables"
         ],
         "summary": "Update License Key",
         "description": "This endpoint updates the details of an existing license key identified by its `id`. It allows changing the `expires_at`, `activation_limit`, or `status`. The update operation is restricted to only allowed fields. Ensure store ownership using the `x-store-id` header.",
@@ -1077,7 +1077,7 @@
     "/license-keys/activate": {
       "post": {
         "tags": [
-          "License Keys"
+          "Deliverables"
         ],
         "summary": "Activate a License Key",
         "description": "Activates a specified license key by incrementing its activation count. Requires `license_key` in the request body. The `x-store-id` header must be provided to ensure store association. Validates the activation limit and expiration before processing.",
@@ -1122,7 +1122,7 @@
     "/license-keys": {
       "get": {
         "tags": [
-          "License Keys"
+          "Deliverables"
         ],
         "summary": "List License Keys",
         "description": "Retrieve a paginated list of all license keys associated with a store, verified via the `x-store-id` header. Allows filtering by `status`, `product_id`, and `order_id`. Utilizes pagination using `limit` query parameter.",
@@ -1185,7 +1185,7 @@
     "/license-keys/validate": {
       "post": {
         "tags": [
-          "License Keys"
+          "Deliverables"
         ],
         "summary": "Validate a License Key",
         "description": "Validates a license key by checking its status, expiration, and activation limits. Requires `license_key` in the request body. The `x-store-id` header must be provided to ensure the key belongs to the store.",
