@@ -1,0 +1,48 @@
+---
+title: "API Overview"
+description: "Base URLs, authentication, pagination, rate limits, and the difference between the core APIs."
+---
+
+Welcome to the Blink API! You can use our API to access Blink API endpoints, which can get information on products, create checkouts, retrieve orders, manage audience, and much more.
+
+## Base URLs
+
+The Blink API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.
+
+<CardGroup cols={2}>
+  <Card title="Production Base URL" icon="globe">
+    `https://api.blink.store/v1`
+  </Card>
+  <Card title="Sandbox Base URL" icon="flask">
+    `https://sandbox-api.blink.store/v1`
+  </Card>
+</CardGroup>
+
+<Info>
+  **Note on Sandbox**: The sandbox environment is fully isolated—data, users, tokens, and organizations created there do not affect production. Create separate tokens in each environment.
+</Info>
+
+## Authentication
+
+Blink uses API keys to authenticate requests. You can view and manage your API keys in the Blink Dashboard.
+
+Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, and so forth.
+
+Authentication to the API is performed via HTTP Bearer Auth. Provide your API key as the bearer token value.
+
+```bash
+Authorization: Bearer blink_live_xxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+<Warning>
+  All API requests must be made over HTTPS. Calls made over plain HTTP will fail. API requests without authentication will also fail.
+</Warning>
+
+## Rate Limits
+
+To prevent abuse, Blink limits the number of API requests you can make in a given timeframe.
+
+* **Production**: 100 requests per second
+* **Sandbox**: 50 requests per second
+
+If you exceed these limits, the API will return a `429 Too Many Requests` status code. You can find more information about your rate limits in the response headers.
