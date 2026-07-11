@@ -1,0 +1,15 @@
+.dark body {
+  background-color: #000000 !important;
+}
+html.dark {
+  background-color: #000000 !important;
+}
+html.dark .bg-background {
+  background-color: #000000 !important;
+}
+html.dark .bg-background-light {
+  background-color: #000000 !important;
+}
+html.dark .bg-background-dark {
+  background-color: #000000 !important;
+}
