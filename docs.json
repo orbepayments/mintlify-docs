@@ -140,14 +140,6 @@
   "fonts": {
     "family": "Inter"
   },
-  "background": {
-    "color": {
-      "dark": "#000000"
-    }
-  },
-  "styling": {
-    "codeblocks": "dark"
-  },
   "icons": {
     "library": "tabler"
   },
