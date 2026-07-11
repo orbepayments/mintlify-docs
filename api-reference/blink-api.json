@@ -2539,6 +2539,58 @@
           }
         ]
       }
+    },
+    "/organizations/{id}/members/{member_id}": {
+      "delete": {
+        "summary": "Remove an Organization Member",
+        "description": "Revokes a member's seat in the organization and removes them.",
+        "operationId": "removeOrganizationMember",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the organization"
+          },
+          {
+            "name": "member_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the member to remove"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Member revoked successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
