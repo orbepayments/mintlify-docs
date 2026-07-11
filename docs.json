@@ -154,6 +154,5 @@
   },
   "icons": {
     "library": "lucide"
-  },
-  "openapi": "api-reference/openapi.json"
+  }
 }
