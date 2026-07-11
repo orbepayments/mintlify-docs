@@ -2474,7 +2474,9 @@
             "description": "List of products retrieved successfully.",
             "content": {
               "application/json": {
-                "$ref": "#/components/schemas/ProductsList"
+                "schema": {
+                  "$ref": "#/components/schemas/ProductsList"
+                }
               }
             }
           },
@@ -2501,7 +2503,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "$ref": "#/components/schemas/CreateProductRequest"
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductRequest"
+              }
             }
           }
         },
@@ -2510,7 +2514,9 @@
             "description": "Product created successfully.",
             "content": {
               "application/json": {
-                "$ref": "#/components/schemas/ProductDetails"
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDetails"
+                }
               }
             }
           },
@@ -5496,6 +5502,9 @@
             }
           }
         }
+      },
+      "CustomerResponse": {
+        "type": "object"
       }
     }
   },
