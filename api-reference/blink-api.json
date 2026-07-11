@@ -3491,20 +3491,6 @@
           "cancel_url": {
             "type": "string"
           },
-          "ui_mode": {
-            "type": "string",
-            "enum": [
-              "hosted",
-              "embedded",
-              "custom_hosted",
-              "custom_embed",
-              "custom_inline"
-            ],
-            "description": "The UI mode for the checkout. 'hosted' redirects to Blink. 'embedded' returns a client secret for Blink Embedded Checkout. The 'custom_*' modes return URLs to Blink's custom checkout interfaces."
-          },
-          "return_url": {
-            "type": "string"
-          },
           "metadata": {
             "type": "object"
           },
