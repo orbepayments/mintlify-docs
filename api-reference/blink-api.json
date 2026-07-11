@@ -3492,13 +3492,114 @@
             "type": "string"
           },
           "ui_mode": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "hosted",
+              "embedded",
+              "custom_hosted",
+              "custom_embed",
+              "custom_inline"
+            ],
+            "description": "The UI mode for the checkout. 'hosted' redirects to Stripe. 'embedded' returns a client secret for Stripe Embedded Checkout. The 'custom_*' modes return URLs to Blink's custom checkout interfaces."
           },
           "return_url": {
             "type": "string"
           },
           "metadata": {
             "type": "object"
+          },
+          "options": {
+            "type": "object",
+            "description": "Customization options for the checkout layout and behavior.",
+            "properties": {
+              "layout": {
+                "type": "string",
+                "enum": [
+                  "split",
+                  "minimal",
+                  "centered"
+                ],
+                "description": "The layout style of the checkout page. Supports 'split', 'minimal', or 'centered'."
+              },
+              "hide_carousel": {
+                "type": "boolean",
+                "description": "Hide the product image carousel."
+              },
+              "hide_title": {
+                "type": "boolean",
+                "description": "Hide the product title."
+              },
+              "hide_discount": {
+                "type": "boolean",
+                "description": "Hide the discount code input."
+              },
+              "hide_refund": {
+                "type": "boolean",
+                "description": "Hide the refund policy text."
+              },
+              "hide_support": {
+                "type": "boolean",
+                "description": "Hide the support contact email."
+              },
+              "show_desc": {
+                "type": "boolean",
+                "description": "Show the full product description."
+              },
+              "button_text": {
+                "type": "string",
+                "description": "Custom text for the checkout button."
+              },
+              "locale": {
+                "type": "string",
+                "description": "The language locale for the checkout."
+              },
+              "product_name": {
+                "type": "string",
+                "description": "Override the product name displayed on the checkout."
+              },
+              "custom_fields": {
+                "type": "array",
+                "description": "An array of custom fields to collect from the buyer.",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "appearance": {
+            "type": "object",
+            "description": "Appearance overrides for custom checkouts.",
+            "properties": {
+              "theme": {
+                "type": "string",
+                "enum": [
+                  "light",
+                  "dark",
+                  "system"
+                ]
+              },
+              "variables": {
+                "type": "object",
+                "properties": {
+                  "colorPrimary": {
+                    "type": "string"
+                  },
+                  "fontFamily": {
+                    "type": "string"
+                  },
+                  "colorBackground": {
+                    "type": "string"
+                  },
+                  "colorText": {
+                    "type": "string"
+                  },
+                  "colorBorder": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           }
         },
         "required": [
