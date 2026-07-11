@@ -17,10 +17,10 @@
           "Balances"
         ],
         "summary": "Retrieve Store Balance",
-        "description": "Fetch the current Stripe balance for a store, using the `x-store-id` header for authentication. The response includes available and pending amounts, and the mode (live/test) of the Stripe account.",
+        "description": "Fetch the current Blink balance for a store, using the `x-store-id` header for authentication. The response includes available and pending amounts, and the mode (live/test) of the Blink account.",
         "responses": {
           "200": {
-            "description": "The Stripe account balance information.",
+            "description": "The Blink account balance information.",
             "content": {
               "application/json": {
                 "schema": {
@@ -299,7 +299,7 @@
           "Checkouts"
         ],
         "summary": "Create a checkout session",
-        "description": "Initializes a new Stripe checkout session and provides the checkout URL.\n\n- **Request Headers:**\n  - `x-store-id` (string, required): The ID of the store creating the checkout.\n\n- **Request Body:**\n  - `product_id` (string, required): Identifier of the product to checkout.\n  - `variant_id` (string, optional): Variant identifier if applicable.\n  - `customer_email` (string, optional): Customer's email address.\n  - ... (other checkout configurations)\n\n- **Response:** A Stripe checkout session object including the checkout URL.\n\nFacilitates smooth customer transactions with Stripe for easy payment processing.",
+        "description": "Initializes a new Blink checkout session and provides the checkout URL.\n\n- **Request Headers:**\n  - `x-store-id` (string, required): The ID of the store creating the checkout.\n\n- **Request Body:**\n  - `product_id` (string, required): Identifier of the product to checkout.\n  - `variant_id` (string, optional): Variant identifier if applicable.\n  - `customer_email` (string, optional): Customer's email address.\n  - ... (other checkout configurations)\n\n- **Response:** A Blink checkout session object including the checkout URL.\n\nFacilitates smooth customer transactions with Blink for easy payment processing.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -740,7 +740,7 @@
           "Disputes"
         ],
         "summary": "List Disputes",
-        "description": "Retrieve a list of all disputes associated with a store's connected Stripe account, verified via `x-store-id`. Supports limiting the number of disputes returned. Returns dispute data, including status and amounts involved.",
+        "description": "Retrieve a list of all disputes associated with a store's connected Blink account, verified via `x-store-id`. Supports limiting the number of disputes returned. Returns dispute data, including status and amounts involved.",
         "parameters": [
           {
             "name": "limit",
@@ -1923,7 +1923,7 @@
           "Payouts"
         ],
         "summary": "List payouts",
-        "description": "Retrieve a list of payouts for the store's connected Stripe account. The `x-store-id` header is used to verify store association and ensure a connected Stripe account exists.\n\n- **Query Parameters:**\n  - `limit` (integer, optional): Number of payouts to return.\n\n- **Responses:**\n  - `200`: Payouts retrieved successfully.\n  - `400`: Store has no connected Stripe account.\n  - `401`: Unauthorized if `x-store-id` is not provided.",
+        "description": "Retrieve a list of payouts for the store's connected Blink account. The `x-store-id` header is used to verify store association and ensure a connected Blink account exists.\n\n- **Query Parameters:**\n  - `limit` (integer, optional): Number of payouts to return.\n\n- **Responses:**\n  - `200`: Payouts retrieved successfully.\n  - `400`: Store has no connected Blink account.\n  - `401`: Unauthorized if `x-store-id` is not provided.",
         "parameters": [
           {
             "name": "limit",
@@ -1946,7 +1946,7 @@
             }
           },
           "400": {
-            "description": "Bad Request - No Stripe account connected."
+            "description": "Bad Request - No Blink account connected."
           },
           "401": {
             "description": "Unauthorized - Store ID header missing."
@@ -3500,7 +3500,7 @@
               "custom_embed",
               "custom_inline"
             ],
-            "description": "The UI mode for the checkout. 'hosted' redirects to Stripe. 'embedded' returns a client secret for Stripe Embedded Checkout. The 'custom_*' modes return URLs to Blink's custom checkout interfaces."
+            "description": "The UI mode for the checkout. 'hosted' redirects to Blink. 'embedded' returns a client secret for Blink Embedded Checkout. The 'custom_*' modes return URLs to Blink's custom checkout interfaces."
           },
           "return_url": {
             "type": "string"
