@@ -3,7 +3,22 @@ title: "API Overview"
 description: "Base URLs, authentication, pagination, rate limits, and the difference between the core APIs."
 ---
 
-Welcome to the Blink API! You can use our API to access Blink API endpoints, which can get information on products, create checkouts, retrieve orders, manage audience, and much more.
+Welcome to the Blink API! Our suite of APIs provides everything you need to build, manage, and scale your storefront programmatically. 
+
+<CardGroup cols={2}>
+  <Card title="Blink API" icon="server" href="/api-reference/blink-api">
+    The main server-to-server API for merchants to manage checkouts, products, and store settings.
+  </Card>
+  <Card title="Shopper API" icon="user" href="/api-reference/shopper-api">
+    Customer-token authenticated endpoints used to power customer-facing dashboards.
+  </Card>
+  <Card title="Growth API" icon="chart-line-up" href="/api-reference/growth-api">
+    Marketing, affiliates, abandoned carts, and upselling tools.
+  </Card>
+  <Card title="Webhooks & Events" icon="webhook" href="/api-reference/webhooks-api">
+    Event tracking, webhook management, and store analytics.
+  </Card>
+</CardGroup>
 
 ## Base URLs
 
@@ -24,21 +39,71 @@ The Blink API is organized around REST. Our API has predictable resource-oriente
 
 ## Authentication
 
-Blink uses API keys to authenticate requests. You can view and manage your API keys in the Blink Dashboard.
+Blink uses different types of authentication tokens depending on the API you are accessing.
 
-Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, and so forth.
+### Merchant Secret Keys (Blink API, Growth API)
+For server-to-server interactions, authenticate requests using your Store Secret Key. You can view and manage your API keys in the Blink Dashboard. **Do not share your secret API keys in publicly accessible areas such as GitHub, or client-side code.**
 
-Authentication to the API is performed via HTTP Bearer Auth. Provide your API key as the bearer token value.
+Authentication to the API is performed via HTTP Bearer Auth.
 
-<RequestExample>
-  ```bash
-  Authorization: Bearer blink_live_xxxxxxxxxxxxxxxxxxxxxxxxxxx
-  ```
-</RequestExample>
+```bash
+Authorization: Bearer blink_live_xxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+### Customer Tokens (Shopper API)
+For the Shopper API, you authenticate using a temporary Customer Token granted when a shopper logs into their customer portal. This token only grants access to data owned by that specific customer.
+
+```bash
+Authorization: Bearer cus_xxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
 
 <Warning>
   All API requests must be made over HTTPS. Calls made over plain HTTP will fail. API requests without authentication will also fail.
 </Warning>
+
+## Blink API vs Shopper API
+
+It's important to use the correct API and token for your use-case.
+
+| Feature | Blink API | Shopper API |
+| :--- | :--- | :--- |
+| **Authentication** | Merchant Secret Key (`blink_live_...`) | Customer Token (`cus_...`) |
+| **Use Case** | Server-side logic, admin dashboards, syncing data. | Client-side customer portals, mobile apps for buyers. |
+| **Permissions** | Full read/write access to your entire store. | Read/write access strictly limited to a single customer. |
+| **Rate Limits** | 100 req / sec | 20 req / sec |
+
+## Pagination
+
+All top-level API resources have support for bulk fetches via "list" API methods. These list API methods share a common pagination structure. Blink uses offset-based pagination via the `page` and `limit` query parameters.
+
+### Query Parameters
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `page` | `integer` | `1` | The page number to retrieve. |
+| `limit` | `integer` | `50` | The number of items to return per page. Max `100`. |
+
+### Response Format
+
+A paginated response will always wrap the results in a `data` array and include a `meta` object containing pagination details.
+
+```json Paginated Response
+{
+  "meta": {
+    "total": 1240,
+    "page": 1,
+    "limit": 50,
+    "has_more": true
+  },
+  "data": [
+    {
+      "id": "ord_123",
+      "amount": 5000,
+      "status": "paid"
+    }
+  ]
+}
+```
 
 ## Rate Limits
 
@@ -47,7 +112,7 @@ To prevent abuse, Blink limits the number of API requests you can make in a give
 * **Production**: 100 requests per second
 * **Sandbox**: 50 requests per second
 
-If you exceed these limits, the API will return a `429 Too Many Requests` status code. You can find more information about your rate limits in the response headers.
+If you exceed these limits, the API will return a `429 Too Many Requests` status code.
 
 <ResponseExample>
   ```json 429 Too Many Requests
