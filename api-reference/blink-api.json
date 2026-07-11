@@ -3501,11 +3501,12 @@
               "layout": {
                 "type": "string",
                 "enum": [
+                  "classic",
+                  "showcase",
                   "split",
-                  "minimal",
-                  "centered"
+                  "minimal"
                 ],
-                "description": "The layout style of the checkout page. Supports 'split', 'minimal', or 'centered'."
+                "description": "The layout style of the checkout page. Supports 'classic', 'showcase', 'split', or 'minimal'."
               },
               "hide_carousel": {
                 "type": "boolean",
