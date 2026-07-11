@@ -1,0 +1,13 @@
+---
+title: 'Update a Subscription'
+openapi: 'PATCH /subscriptions/{id}'
+---
+
+Update a subscription's status or swap to a different plan.
+
+### Actions
+
+- **`cancel`**: Cancels the subscription at the end of the current billing period.
+- **`cancel_immediately`**: Cancels the subscription immediately.
+- **`resume`**: Resumes a subscription that was previously scheduled to cancel at period end.
+- **`swap`**: Instantly swaps the subscription to a new `variant_id` or `product_id`. Prorated charges will be applied automatically to the customer's next invoice.

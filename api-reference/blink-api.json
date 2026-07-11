@@ -2591,6 +2591,186 @@
           }
         }
       }
+    },
+    "/subscriptions/{id}": {
+      "patch": {
+        "summary": "Update a Subscription",
+        "description": "Updates a subscription. Can be used to cancel, resume, or swap plans.",
+        "operationId": "updateSubscription",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the subscription"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "action"
+                ],
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "cancel",
+                      "cancel_immediately",
+                      "resume",
+                      "swap"
+                    ],
+                    "description": "The action to perform on the subscription."
+                  },
+                  "variant_id": {
+                    "type": "string",
+                    "description": "The ID of the target variant (required if action is swap, unless product_id is provided)."
+                  },
+                  "product_id": {
+                    "type": "string",
+                    "description": "The ID of the target product (required if action is swap, unless variant_id is provided)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Subscription updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "cancel_at_period_end": {
+                          "type": "boolean"
+                        },
+                        "current_period_end": {
+                          "type": "string"
+                        },
+                        "updated_at": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{id}/preview-swap": {
+      "get": {
+        "summary": "Preview Subscription Swap",
+        "description": "Calculates the prorated cost of swapping an active subscription to a new product or variant.",
+        "operationId": "previewSubscriptionSwap",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the subscription"
+          },
+          {
+            "name": "variant_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The target variant ID for the swap."
+          },
+          {
+            "name": "product_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The target product ID for the swap."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully calculated proration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "amount_due": {
+                          "type": "integer",
+                          "description": "The total prorated amount due in cents."
+                        },
+                        "subtotal": {
+                          "type": "integer"
+                        },
+                        "currency": {
+                          "type": "string"
+                        },
+                        "prorations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "amount": {
+                                "type": "integer"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "period": {
+                                "type": "object"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
