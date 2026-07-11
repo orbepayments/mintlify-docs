@@ -120,7 +120,6 @@
             "openapi": "api-reference/webhooks-api.json"
           }
         ],
-        "hidden": true,
         "icon": "code"
       }
     ]
