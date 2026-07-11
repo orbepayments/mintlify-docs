@@ -3734,7 +3734,7 @@
                 "type": "string",
                 "enum": [
                   "classic",
-                  "showcase",
+                  "overlay", "inline",
                   "split",
                   "minimal"
                 ],
@@ -5822,11 +5822,11 @@
             "type": "string",
             "enum": [
               "classic",
-              "showcase",
+              "overlay", "inline",
               "split",
               "minimal"
             ],
-            "description": "The overall layout structure of the checkout page. `classic` is standard, `showcase` highlights product imagery, `split` divides into two columns, and `minimal` removes all distractions."
+            "description": "The overall layout structure of the checkout page. `classic` is standard, `overlay` highlights product imagery, `inline` embeds the form, `split` divides into two columns, and `minimal` removes all distractions."
           },
           "display_options": {
             "type": "object",

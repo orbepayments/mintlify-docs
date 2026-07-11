@@ -8,8 +8,8 @@ const CheckoutDesignSchema = {
   properties: {
     layout: {
       type: 'string',
-      enum: ['classic', 'showcase', 'split', 'minimal'],
-      description: 'The overall layout structure of the checkout page. `classic` is standard, `showcase` highlights product imagery, `split` divides into two columns, and `minimal` removes all distractions.'
+      enum: ['classic', 'overlay', 'inline', 'split', 'minimal'],
+      description: 'The overall layout structure of the checkout page. `classic` is standard, `overlay` highlights product imagery, `inline` embeds the form, `split` divides into two columns, and `minimal` removes all distractions.'
     },
     display_options: {
       type: 'object',
@@ -55,7 +55,7 @@ for (const key of Object.keys(data.components.schemas)) {
 
 // Ensure the endpoints have a description mentioning these Layouts.
 if (data.paths['/v1/checkout-links'] && data.paths['/v1/checkout-links'].post) {
-  data.paths['/v1/checkout-links'].post.description += '\n\n### Checkout Customizations\nYou can completely customize the visual aesthetic of the checkout link by passing a `design` object. This includes choosing between four expert layouts (`classic`, `showcase`, `split`, `minimal`), toggling UI elements like discount fields, and overriding store-level theme colors.';
+  data.paths['/v1/checkout-links'].post.description += '\n\n### Checkout Customizations\nYou can completely customize the visual aesthetic of the checkout link by passing a `design` object. This includes choosing between five expert layouts (`classic`, `overlay`, `inline`, `split`, `minimal`), toggling UI elements like discount fields, and overriding store-level theme colors.';
 }
 
 fs.writeFileSync(p, JSON.stringify(data, null, 2));
