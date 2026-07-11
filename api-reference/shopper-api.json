@@ -63,7 +63,9 @@
             "description": "Refunds retrieved successfully.",
             "content": {
               "application/json": {
-                "$ref": "#/components/schemas/RefundsList"
+                "schema": {
+                  "$ref": "#/components/schemas/RefundsList"
+                }
               }
             }
           },
@@ -130,7 +132,9 @@
             "description": "Invoices retrieved successfully.",
             "content": {
               "application/json": {
-                "$ref": "#/components/schemas/SubscriptionInvoicesList"
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionInvoicesList"
+                }
               }
             }
           },
@@ -171,7 +175,9 @@
             "description": "Subscription details retrieved successfully.",
             "content": {
               "application/json": {
-                "$ref": "#/components/schemas/SubscriptionDetails"
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionDetails"
+                }
               }
             }
           },
@@ -212,7 +218,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "$ref": "#/components/schemas/UpdateSubscriptionRequest"
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSubscriptionRequest"
+              }
             }
           }
         },
@@ -221,7 +229,9 @@
             "description": "Subscription status updated successfully.",
             "content": {
               "application/json": {
-                "$ref": "#/components/schemas/SubscriptionDetails"
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionDetails"
+                }
               }
             }
           },
@@ -291,7 +301,9 @@
             "description": "List of subscriptions retrieved successfully.",
             "content": {
               "application/json": {
-                "$ref": "#/components/schemas/SubscriptionsList"
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionsList"
+                }
               }
             }
           },
