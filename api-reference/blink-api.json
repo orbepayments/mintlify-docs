@@ -3584,18 +3584,6 @@
                 "properties": {
                   "colorPrimary": {
                     "type": "string"
-                  },
-                  "fontFamily": {
-                    "type": "string"
-                  },
-                  "colorBackground": {
-                    "type": "string"
-                  },
-                  "colorText": {
-                    "type": "string"
-                  },
-                  "colorBorder": {
-                    "type": "string"
                   }
                 }
               }
