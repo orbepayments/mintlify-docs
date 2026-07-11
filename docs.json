@@ -7,6 +7,9 @@
     "light": "#317cff",
     "dark": "#0058F0"
   },
+  "background": {
+    "dark": "#000000"
+  },
   "navigation": {
     "tabs": [
       {
