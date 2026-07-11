@@ -8,7 +8,10 @@
     "dark": "#0058F0"
   },
   "background": {
-    "dark": "#000000"
+    "dark": "#000000",
+    "color": {
+      "dark": "#000000"
+    }
   },
   "navigation": {
     "tabs": [
@@ -116,7 +119,8 @@
             "group": "Webhooks & Events",
             "openapi": "api-reference/webhooks-api.json"
           }
-        ]
+        ],
+        "hidden": true
       }
     ]
   },
