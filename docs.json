@@ -127,11 +127,11 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/sellonblink"
+      "x": "https://x.com/blinkdotstore"
     }
   },
   "appearance": {
-    "strict": true,
+    "strict": false,
     "default": "dark",
     "banner": "Welcome to Blink documentation"
   },
@@ -149,7 +149,7 @@
     "codeblocks": "dark"
   },
   "icons": {
-    "library": "lucide"
+    "library": "tabler"
   },
   "openapi": "api-reference/openapi.json"
 }
