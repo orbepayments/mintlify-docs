@@ -31,9 +31,11 @@ Your API keys carry many privileges, so be sure to keep them secure! Do not shar
 
 Authentication to the API is performed via HTTP Bearer Auth. Provide your API key as the bearer token value.
 
-```bash
-Authorization: Bearer blink_live_xxxxxxxxxxxxxxxxxxxxxxxxxxx
-```
+<RequestExample>
+  ```bash
+  Authorization: Bearer blink_live_xxxxxxxxxxxxxxxxxxxxxxxxxxx
+  ```
+</RequestExample>
 
 <Warning>
   All API requests must be made over HTTPS. Calls made over plain HTTP will fail. API requests without authentication will also fail.
@@ -47,3 +49,12 @@ To prevent abuse, Blink limits the number of API requests you can make in a give
 * **Sandbox**: 50 requests per second
 
 If you exceed these limits, the API will return a `429 Too Many Requests` status code. You can find more information about your rate limits in the response headers.
+
+<ResponseExample>
+  ```json 429 Too Many Requests
+  {
+    "error": "rate_limit_exceeded",
+    "message": "You have exceeded the rate limit of 100 requests per second."
+  }
+  ```
+</ResponseExample>
