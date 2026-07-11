@@ -96,9 +96,12 @@
       {
         "tab": "API",
         "pages": [
-          "api-reference/introduction"
-        ],
-        "openapi": "api-reference/openapi.json"
+          "api-reference/introduction",
+          {
+            "group": "Core API",
+            "openapi": "api-reference/openapi.json"
+          }
+        ]
       }
     ]
   },
