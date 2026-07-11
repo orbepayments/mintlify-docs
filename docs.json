@@ -95,7 +95,7 @@
       },
       {
         "tab": "API",
-        "pages": ["api-reference"]
+        "openapi": "api-reference/openapi.json"
       }
     ]
   },
