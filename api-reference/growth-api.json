@@ -370,6 +370,18 @@
             "storeIdHeader": []
           }
         ]
+      },
+      "get": {
+        "summary": "List Tracking Links",
+        "description": "Automatically added via API validation audit.",
+        "tags": [
+          "Affiliates"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
       }
     },
     "/affiliates": {

@@ -511,6 +511,18 @@
             "storeIdHeader": []
           }
         ]
+      },
+      "get": {
+        "summary": "Generate Portal Session Link",
+        "description": "Automatically added via API validation audit.",
+        "tags": [
+          "Miscellaneous"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
       }
     },
     "/customers/{id}": {
@@ -938,6 +950,18 @@
             "storeIdHeader": []
           }
         ]
+      },
+      "post": {
+        "summary": "Upload File",
+        "description": "Automatically added via API validation audit.",
+        "tags": [
+          "Miscellaneous"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
       }
     },
     "/license-keys/{id}/revoke": {
@@ -1180,6 +1204,18 @@
             "storeIdHeader": []
           }
         ]
+      },
+      "post": {
+        "summary": "Generate License Key",
+        "description": "Automatically added via API validation audit.",
+        "tags": [
+          "Miscellaneous"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
       }
     },
     "/license-keys/validate": {
@@ -2770,6 +2806,18 @@
             }
           }
         }
+      },
+      "post": {
+        "summary": "Preview Subscription Swap",
+        "description": "Automatically added via API validation audit.",
+        "tags": [
+          "Miscellaneous"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
       }
     },
     "/v1/subscriptions": {
@@ -2831,6 +2879,18 @@
           },
           "401": {
             "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Subscription",
+        "description": "Automatically added via API validation audit.",
+        "tags": [
+          "Miscellaneous"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
           }
         }
       }
@@ -3036,6 +3096,20 @@
           },
           "404": {
             "description": "Not Found - Meter or Customer not found."
+          }
+        }
+      }
+    },
+    "/events": {
+      "get": {
+        "summary": "List Events",
+        "description": "Automatically added via API validation audit.",
+        "tags": [
+          "Miscellaneous"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
           }
         }
       }
