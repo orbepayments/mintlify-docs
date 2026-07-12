@@ -5,62 +5,104 @@ description: "A complete reference of all webhook events supported by Blink."
 
 When you register a webhook endpoint, you can subscribe to specific events. Below is the comprehensive list of all events you can listen for across the Blink platform.
 
-## Products
+## Orders
 | Event Name | Description |
 |---|---|
-| `product.created` | Fired when a new product is created in your store. |
-| `product.updated` | Fired when a product's details or settings are modified. |
-| `product.archived` | Fired when a product is archived or deleted. |
-
-## Discounts & Coupons
-| Event Name | Description |
-|---|---|
-| `discount.created` | Fired when a new discount coupon is generated. |
-| `discount.updated` | Fired when an existing coupon is modified. |
-
-## Customers
-| Event Name | Description |
-|---|---|
-| `customer.created` | Fired when a new customer is added to your audience. |
-| `customer.updated` | Fired when a customer's details are updated. |
+| `order.created` | Fired when a new order is placed. |
+| `order.paid` | Fired when payment is confirmed on an order. |
+| `order.refunded` | Fired when an order is refunded. |
 
 ## Checkouts
 | Event Name | Description |
 |---|---|
-| `checkout.created` | Fired when a new checkout session is initiated. |
-| `checkout.completed` | Fired when a checkout session is successfully paid. |
-| `checkout.expired` | Fired when a checkout session expires without payment. |
+| `checkout.created` | Fired when a checkout session is created. |
+| `checkout.completed` | Fired when a checkout is completed. |
+| `checkout.expired` | Fired when a checkout session expires. |
 
-## Orders
+## Customers & Seats
 | Event Name | Description |
 |---|---|
-| `order.created` | Fired when an order is placed. |
-| `order.paid` | Fired when an order payment succeeds. |
-| `order.refunded` | Fired when an order is refunded. |
+| `customer.created` | Fired when a new customer record is created. |
+| `customer.updated` | Fired when customer details are updated. |
+| `customer.seat_added` | Fired when a seat is assigned to a member. |
+| `customer.seat_removed` | Fired when a seat is removed from a member. |
+| `customer.deleted` | Fired when a customer is deleted or unsubscribed. |
 
 ## Subscriptions
 | Event Name | Description |
 |---|---|
-| `subscription.created` | Fired when a new subscription is started. |
-| `subscription.updated` | Fired when a subscription plan or status changes. |
-| `subscription.canceled` | Fired when a subscription is canceled. |
+| `subscription.created` | Fired when a subscription starts. |
 | `subscription.active` | Fired when a subscription becomes active. |
-| `subscription.past_due` | Fired when a subscription payment fails and becomes past due. |
+| `subscription.updated` | Fired when a subscription is updated. |
+| `subscription.canceled` | Fired when a subscription is canceled. |
+| `subscription.uncanceled` | Fired when a cancellation is reversed. |
+| `subscription.past_due` | Fired when a payment fails, making the subscription past due. |
+| `subscription.revoked` | Fired when a subscription is forcefully ended. |
+| `subscription.upgraded` | Fired when a subscription is upgraded or downgraded. |
+
+## Products
+| Event Name | Description |
+|---|---|
+| `product.created` | Fired when a product is created. |
+| `product.updated` | Fired when a product is updated. |
+| `product.archived` | Fired when a product is archived. |
+
+## Discounts
+| Event Name | Description |
+|---|---|
+| `discount.created` | Fired when a discount is created. |
+| `discount.updated` | Fired when a discount is updated. |
+| `discount.deleted` | Fired when a discount is deleted. |
 
 ## License Keys
 | Event Name | Description |
 |---|---|
-| `license_key.created` | Fired when a new license key is generated. |
+| `license_key.created` | Fired when a license key is issued. |
 | `license_key.revoked` | Fired when a license key is revoked. |
 
 ## Affiliates
 | Event Name | Description |
 |---|---|
 | `affiliate.approved` | Fired when an affiliate application is approved. |
-| `affiliate.conversion` | Fired when an affiliate successfully refers a sale. |
+| `affiliate.conversion` | Fired when an affiliate records a conversion. |
+| `affiliate.commission_earned` | Fired when an affiliate earns commission on a successful payout. |
 
 ## Abandoned Carts
 | Event Name | Description |
 |---|---|
-| `abandoned_cart.created` | Fired when an abandoned cart is detected. |
-| `abandoned_cart.recovered` | Fired when a recovery email is sent or a cart is recovered. |
+| `abandoned_cart.created` | Fired when a cart is abandoned. |
+| `abandoned_cart.recovered` | Fired when an abandoned cart is recovered. |
+
+## Organizations
+| Event Name | Description |
+|---|---|
+| `organization.created` | Fired when an organization is created. |
+| `organization.updated` | Fired when organization details are updated. |
+| `organization.deleted` | Fired when an organization is deleted. |
+
+## Disputes
+| Event Name | Description |
+|---|---|
+| `dispute.created` | Fired when a dispute is opened. |
+| `dispute.won` | Fired when a dispute is won. |
+| `dispute.lost` | Fired when a dispute is lost. |
+
+## Payouts
+| Event Name | Description |
+|---|---|
+| `payout.created` | Fired when a payout is created. |
+| `payout.paid` | Fired when a payout is successfully paid. |
+| `payout.failed` | Fired when a payout fails to process. |
+
+## Refunds
+| Event Name | Description |
+|---|---|
+| `refund.created` | Fired when a refund is initiated. |
+| `refund.updated` | Fired when a refund status is updated. |
+
+## Subscription Invoices
+| Event Name | Description |
+|---|---|
+| `subscription_invoice.created` | Fired when a new invoice is generated. |
+| `subscription_invoice.paid` | Fired when an invoice is paid. |
+| `subscription_invoice.payment_failed` | Fired when an invoice payment fails. |
