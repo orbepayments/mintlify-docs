@@ -3113,6 +3113,34 @@
           }
         }
       }
+    },
+    "/subscription-invoices/{id}": {
+      "patch": {
+        "summary": "Update Subscription Invoice",
+        "description": "Automatically added via Phase 2 API validation audit.",
+        "tags": [
+          "Miscellaneous"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/subscription-invoices": {
+      "patch": {
+        "summary": "Update Subscription Invoices",
+        "description": "Automatically added via Phase 2 API validation audit.",
+        "tags": [
+          "Miscellaneous"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
     }
   },
   "components": {
