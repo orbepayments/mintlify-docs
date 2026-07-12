@@ -97,7 +97,8 @@
             "icon": "badge-dollar-sign",
             "expanded": true
           }
-        ]
+        ],
+        "icon": "file"
       },
       {
         "tab": "API",
