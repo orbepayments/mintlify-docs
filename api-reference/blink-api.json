@@ -17,10 +17,10 @@
           "Balances"
         ],
         "summary": "Retrieve Store Balance",
-        "description": "Fetch the current Blink balance for a store, using the `x-store-id` header for authentication. The response includes available and pending amounts, and the mode (live/test) of the Blink account.",
+        "description": "Fetch the current Stripe balance for a store, using the `x-store-id` header for authentication. The response includes available and pending amounts, and the mode (live/test) of the Stripe account.",
         "responses": {
           "200": {
-            "description": "The Blink account balance information.",
+            "description": "The Stripe account balance information.",
             "content": {
               "application/json": {
                 "schema": {
@@ -299,7 +299,7 @@
           "Checkouts"
         ],
         "summary": "Create a checkout session",
-        "description": "Initializes a new Blink checkout session and provides the checkout URL.\n\n- **Request Headers:**\n  - `x-store-id` (string, required): The ID of the store creating the checkout.\n\n- **Request Body:**\n  - `product_id` (string, required): Identifier of the product to checkout.\n  - `variant_id` (string, optional): Variant identifier if applicable.\n  - `customer_email` (string, optional): Customer's email address.\n  - ... (other checkout configurations)\n\n- **Response:** A Blink checkout session object including the checkout URL.\n\nFacilitates smooth customer transactions with Blink for easy payment processing.",
+        "description": "Initializes a new Stripe checkout session and provides the checkout URL.\n\n- **Request Headers:**\n  - `x-store-id` (string, required): The ID of the store creating the checkout.\n\n- **Request Body:**\n  - `product_id` (string, required): Identifier of the product to checkout.\n  - `variant_id` (string, optional): Variant identifier if applicable.\n  - `customer_email` (string, optional): Customer's email address.\n  - ... (other checkout configurations)\n\n- **Response:** A Stripe checkout session object including the checkout URL.\n\nFacilitates smooth customer transactions with Stripe for easy payment processing.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -740,7 +740,7 @@
           "Disputes"
         ],
         "summary": "List Disputes",
-        "description": "Retrieve a list of all disputes associated with a store's connected Blink account, verified via `x-store-id`. Supports limiting the number of disputes returned. Returns dispute data, including status and amounts involved.",
+        "description": "Retrieve a list of all disputes associated with a store's connected Stripe account, verified via `x-store-id`. Supports limiting the number of disputes returned. Returns dispute data, including status and amounts involved.",
         "parameters": [
           {
             "name": "limit",
@@ -773,7 +773,7 @@
     "/files/{id}/download": {
       "get": {
         "tags": [
-          "Deliverables"
+          "Files"
         ],
         "summary": "Download file via pre-signed URL",
         "description": "Generate a pre-signed URL to download a file from the store's storage on Cloudflare R2. The endpoint validates that the file exists and belongs to the store using the `x-store-id` header. You may specify the `expires_in` query parameter to control the URL's validity period, up to a maximum of 24 hours.",
@@ -819,7 +819,7 @@
     "/files/{id}": {
       "get": {
         "tags": [
-          "Deliverables"
+          "Files"
         ],
         "summary": "Retrieve file details",
         "description": "Fetch detailed information about a specific file deliverable, ensuring that it belongs to the store by verifying the `x-store-id` header. Returns metadata such as title, description, and associated product details.",
@@ -854,7 +854,7 @@
       },
       "delete": {
         "tags": [
-          "Deliverables"
+          "Files"
         ],
         "summary": "Delete a file deliverable",
         "description": "Delete a file from the store's records. The endpoint checks if the file exists and is associated with the store using the `x-store-id` header before deletion.",
@@ -891,7 +891,7 @@
     "/files": {
       "get": {
         "tags": [
-          "Deliverables"
+          "Files"
         ],
         "summary": "List all files",
         "description": "Retrieve a list of all files associated with a store. Supports filtering by product and variant IDs, along with pagination via the `limit` parameter.",
@@ -943,7 +943,7 @@
     "/license-keys/{id}/revoke": {
       "post": {
         "tags": [
-          "Deliverables"
+          "License Keys"
         ],
         "summary": "Revoke a license key",
         "description": "Permanently disable a specific license key, ensuring it belongs to the store. Checks the key's current status and updates it to 'revoked'. If the key is already revoked, a bad request error is returned.",
@@ -980,7 +980,7 @@
     "/license-keys/{id}": {
       "get": {
         "tags": [
-          "Deliverables"
+          "License Keys"
         ],
         "summary": "Retrieve License Key Details",
         "description": "This endpoint fetches detailed information about a specific license key using the provided `id` path parameter. The request requires verification via the `x-store-id` header to ensure that the key is associated with the correct store. It returns detailed information including the key status, product details, customer information, and associated order data.",
@@ -1021,7 +1021,7 @@
       },
       "patch": {
         "tags": [
-          "Deliverables"
+          "License Keys"
         ],
         "summary": "Update License Key",
         "description": "This endpoint updates the details of an existing license key identified by its `id`. It allows changing the `expires_at`, `activation_limit`, or `status`. The update operation is restricted to only allowed fields. Ensure store ownership using the `x-store-id` header.",
@@ -1077,7 +1077,7 @@
     "/license-keys/activate": {
       "post": {
         "tags": [
-          "Deliverables"
+          "License Keys"
         ],
         "summary": "Activate a License Key",
         "description": "Activates a specified license key by incrementing its activation count. Requires `license_key` in the request body. The `x-store-id` header must be provided to ensure store association. Validates the activation limit and expiration before processing.",
@@ -1122,7 +1122,7 @@
     "/license-keys": {
       "get": {
         "tags": [
-          "Deliverables"
+          "License Keys"
         ],
         "summary": "List License Keys",
         "description": "Retrieve a paginated list of all license keys associated with a store, verified via the `x-store-id` header. Allows filtering by `status`, `product_id`, and `order_id`. Utilizes pagination using `limit` query parameter.",
@@ -1185,7 +1185,7 @@
     "/license-keys/validate": {
       "post": {
         "tags": [
-          "Deliverables"
+          "License Keys"
         ],
         "summary": "Validate a License Key",
         "description": "Validates a license key by checking its status, expiration, and activation limits. Requires `license_key` in the request body. The `x-store-id` header must be provided to ensure the key belongs to the store.",
@@ -1923,7 +1923,7 @@
           "Payouts"
         ],
         "summary": "List payouts",
-        "description": "Retrieve a list of payouts for the store's connected Blink account. The `x-store-id` header is used to verify store association and ensure a connected Blink account exists.\n\n- **Query Parameters:**\n  - `limit` (integer, optional): Number of payouts to return.\n\n- **Responses:**\n  - `200`: Payouts retrieved successfully.\n  - `400`: Store has no connected Blink account.\n  - `401`: Unauthorized if `x-store-id` is not provided.",
+        "description": "Retrieve a list of payouts for the store's connected Stripe account. The `x-store-id` header is used to verify store association and ensure a connected Stripe account exists.\n\n- **Query Parameters:**\n  - `limit` (integer, optional): Number of payouts to return.\n\n- **Responses:**\n  - `200`: Payouts retrieved successfully.\n  - `400`: Store has no connected Stripe account.\n  - `401`: Unauthorized if `x-store-id` is not provided.",
         "parameters": [
           {
             "name": "limit",
@@ -1946,7 +1946,7 @@
             }
           },
           "400": {
-            "description": "Bad Request - No Blink account connected."
+            "description": "Bad Request - No Stripe account connected."
           },
           "401": {
             "description": "Unauthorized - Store ID header missing."
@@ -2474,9 +2474,7 @@
             "description": "List of products retrieved successfully.",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductsList"
-                }
+                "$ref": "#/components/schemas/ProductsList"
               }
             }
           },
@@ -2503,9 +2501,7 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateProductRequest"
-              }
+              "$ref": "#/components/schemas/CreateProductRequest"
             }
           }
         },
@@ -2514,9 +2510,7 @@
             "description": "Product created successfully.",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductDetails"
-                }
+                "$ref": "#/components/schemas/ProductDetails"
               }
             }
           },
@@ -2540,68 +2534,76 @@
         ]
       }
     },
-    "/organizations/{id}/members/{member_id}": {
-      "delete": {
-        "summary": "Remove an Organization Member",
-        "description": "Revokes a member's seat in the organization and removes them.",
-        "operationId": "removeOrganizationMember",
-        "security": [
-          {
-            "bearerAuth": []
-          }
+    "/v1/subscriptions": {
+      "get": {
+        "tags": [
+          "Subscriptions"
         ],
+        "summary": "List subscriptions",
+        "description": "Retrieves a list of all subscriptions for a given store. Supports filtering by status, customer ID, and product ID. Includes pagination.\n\n**Business Use-case:** Useful for managing and analyzing all active and past subscriptions.\n\n**Query Parameters:**\n- `x-store-id`: Store identifier (header, required).\n- `limit`: Limit the number of subscriptions retrieved.\n- `status`: Filter by subscription status.\n- `customer_id`: Filter by customer ID.\n- `product_id`: Filter by product ID.\n\n**Responses:**\n- `200`: Subscriptions retrieved successfully.\n- `401`: Unauthorized if `x-store-id` is missing.",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
+            "name": "x-store-id",
+            "in": "header",
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "The ID of the organization"
+            }
           },
           {
-            "name": "member_id",
-            "in": "path",
-            "required": true,
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
             "schema": {
               "type": "string"
-            },
-            "description": "The ID of the member to remove"
+            }
+          },
+          {
+            "name": "customer_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Member revoked successfully",
+            "description": "Subscriptions list retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/SubscriptionsListResponse"
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
     },
-    "/subscriptions/{id}": {
-      "patch": {
-        "summary": "Update a Subscription",
-        "description": "Updates a subscription. Can be used to cancel, resume, or swap plans.",
-        "operationId": "updateSubscription",
-        "security": [
-          {
-            "bearerAuth": []
-          }
+    "/v1/subscriptions/{id}": {
+      "get": {
+        "tags": [
+          "Subscriptions"
         ],
+        "summary": "Retrieve subscription details",
+        "description": "Fetches detailed information about a specific subscription. Includes product and variant details associated with the subscription.\n\n**Business Use-case:** Useful for understanding customer subscriptions and managing their lifecycle.\n\n**Path Parameters:**\n- `id`: Subscription ID (path parameter, required).\n\n**Responses:**\n- `200`: Subscription details retrieved successfully.\n- `401`: Unauthorized if `x-store-id` is missing.\n- `404`: Not Found if the subscription does not exist.",
         "parameters": [
           {
             "name": "id",
@@ -2609,39 +2611,65 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "The ID of the subscription"
+            }
+          },
+          {
+            "name": "x-store-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionDetailResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "summary": "Update subscription status",
+        "description": "Updates the status of a subscription, allowing actions such as cancelation, immediate cancelation, or resumption.\n\n**Business Use-case:** Useful for managing the lifecycle of subscriptions, including cancelation and resumption.\n\n**Path Parameters:**\n- `id`: Subscription ID (path parameter, required).\n\n**Request Body:**\n- `action`: The action to perform on the subscription (required: `cancel`, `cancel_immediately`, or `resume`).\n\n**Responses:**\n- `200`: Subscription updated successfully.\n- `400`: Bad request if action is invalid.\n- `401`: Unauthorized if `x-store-id` is missing.\n- `404`: Not Found if the subscription does not exist.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-store-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "required": [
-                  "action"
-                ],
-                "properties": {
-                  "action": {
-                    "type": "string",
-                    "enum": [
-                      "cancel",
-                      "cancel_immediately",
-                      "resume",
-                      "swap"
-                    ],
-                    "description": "The action to perform on the subscription."
-                  },
-                  "variant_id": {
-                    "type": "string",
-                    "description": "The ID of the target variant (required if action is swap, unless product_id is provided)."
-                  },
-                  "product_id": {
-                    "type": "string",
-                    "description": "The ID of the target product (required if action is swap, unless variant_id is provided)."
-                  }
-                }
+                "$ref": "#/components/schemas/SubscriptionUpdateRequest"
               }
             }
           }
@@ -2652,122 +2680,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string"
-                        },
-                        "status": {
-                          "type": "string"
-                        },
-                        "cancel_at_period_end": {
-                          "type": "boolean"
-                        },
-                        "current_period_end": {
-                          "type": "string"
-                        },
-                        "updated_at": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/SubscriptionDetailResponse"
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/subscriptions/{id}/preview-swap": {
-      "get": {
-        "summary": "Preview Subscription Swap",
-        "description": "Calculates the prorated cost of swapping an active subscription to a new product or variant.",
-        "operationId": "previewSubscriptionSwap",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The ID of the subscription"
           },
-          {
-            "name": "variant_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The target variant ID for the swap."
+          "400": {
+            "description": "Bad Request"
           },
-          {
-            "name": "product_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The target product ID for the swap."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully calculated proration",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "amount_due": {
-                          "type": "integer",
-                          "description": "The total prorated amount due in cents."
-                        },
-                        "subtotal": {
-                          "type": "integer"
-                        },
-                        "currency": {
-                          "type": "string"
-                        },
-                        "prorations": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "string"
-                              },
-                              "amount": {
-                                "type": "integer"
-                              },
-                              "description": {
-                                "type": "string"
-                              },
-                              "period": {
-                                "type": "object"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -3614,7 +3539,7 @@
             "type": "string"
           },
           "design": {
-            "$ref": "#/components/schemas/CheckoutDesign"
+            "type": "object"
           },
           "status": {
             "type": "string"
@@ -3637,7 +3562,7 @@
             "type": "string"
           },
           "design": {
-            "$ref": "#/components/schemas/CheckoutDesign"
+            "type": "object"
           },
           "status": {
             "type": "string"
@@ -3661,7 +3586,7 @@
             "type": "string"
           },
           "design": {
-            "$ref": "#/components/schemas/CheckoutDesign"
+            "type": "object"
           },
           "status": {
             "type": "string"
@@ -3723,90 +3648,14 @@
           "cancel_url": {
             "type": "string"
           },
+          "ui_mode": {
+            "type": "string"
+          },
+          "return_url": {
+            "type": "string"
+          },
           "metadata": {
             "type": "object"
-          },
-          "options": {
-            "type": "object",
-            "description": "Customization options for the checkout layout and behavior.",
-            "properties": {
-              "layout": {
-                "type": "string",
-                "enum": [
-                  "classic",
-                  "overlay", "inline",
-                  "split",
-                  "minimal"
-                ],
-                "description": "The layout style of the checkout page. Supports 'classic', 'showcase', 'split', or 'minimal'."
-              },
-              "hide_carousel": {
-                "type": "boolean",
-                "description": "Hide the product image carousel."
-              },
-              "hide_title": {
-                "type": "boolean",
-                "description": "Hide the product title."
-              },
-              "hide_discount": {
-                "type": "boolean",
-                "description": "Hide the discount code input."
-              },
-              "hide_refund": {
-                "type": "boolean",
-                "description": "Hide the refund policy text."
-              },
-              "hide_support": {
-                "type": "boolean",
-                "description": "Hide the support contact email."
-              },
-              "show_desc": {
-                "type": "boolean",
-                "description": "Show the full product description."
-              },
-              "button_text": {
-                "type": "string",
-                "description": "Custom text for the checkout button."
-              },
-              "locale": {
-                "type": "string",
-                "description": "The language locale for the checkout."
-              },
-              "product_name": {
-                "type": "string",
-                "description": "Override the product name displayed on the checkout."
-              },
-              "custom_fields": {
-                "type": "array",
-                "description": "An array of custom fields to collect from the buyer.",
-                "items": {
-                  "type": "object",
-                  "additionalProperties": true
-                }
-              }
-            }
-          },
-          "appearance": {
-            "type": "object",
-            "description": "Appearance overrides for custom checkouts.",
-            "properties": {
-              "theme": {
-                "type": "string",
-                "enum": [
-                  "light",
-                  "dark",
-                  "system"
-                ]
-              },
-              "variables": {
-                "type": "object",
-                "properties": {
-                  "colorPrimary": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
           }
         },
         "required": [
@@ -5811,78 +5660,58 @@
           }
         }
       },
-      "CustomerResponse": {
-        "type": "object"
-      },
-      "CheckoutDesign": {
+      "SubscriptionsListResponse": {
         "type": "object",
-        "description": "Configuration for the visual layout, display options, and colors of a custom checkout.",
         "properties": {
-          "layout": {
-            "type": "string",
-            "enum": [
-              "classic",
-              "overlay", "inline",
-              "split",
-              "minimal"
-            ],
-            "description": "The overall layout structure of the checkout page. `classic` is standard, `overlay` highlights product imagery, `inline` embeds the form, `split` divides into two columns, and `minimal` removes all distractions."
-          },
-          "display_options": {
+          "meta": {
             "type": "object",
             "properties": {
-              "preview_button": {
-                "type": "boolean",
-                "description": "Show a preview button next to the product title."
-              },
-              "discount_code": {
-                "type": "boolean",
-                "description": "Show a discount input field at checkout."
-              },
-              "refund_policy": {
-                "type": "boolean",
-                "description": "Display a refund policy link in the footer."
+              "total": {
+                "type": "integer"
               }
             }
           },
-          "override_theme": {
-            "type": "boolean",
-            "description": "If true, ignores the global store theme and uses the custom colors defined below."
-          },
-          "colors": {
-            "type": "object",
-            "properties": {
-              "button": {
-                "type": "string",
-                "description": "Primary button color."
-              },
-              "button_hover": {
-                "type": "string",
-                "description": "Button color when hovered."
-              },
-              "button_text": {
-                "type": "string",
-                "description": "Text color inside buttons."
-              },
-              "button_text_hover": {
-                "type": "string",
-                "description": "Text color when hovering over buttons."
-              },
-              "link": {
-                "type": "string",
-                "description": "Color for clickable links."
-              },
-              "checkbox": {
-                "type": "string",
-                "description": "Color of variants checkbox."
-              },
-              "selection_border": {
-                "type": "string",
-                "description": "Border color for selected variants/methods."
-              },
-              "selection_background": {
-                "type": "string",
-                "description": "Background color for selected states."
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "store_id": {
+                  "type": "string"
+                },
+                "product_id": {
+                  "type": "string"
+                },
+                "variant_id": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "current_period_end": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "cancel_at_period_end": {
+                  "type": "boolean"
+                },
+                "metadata": {
+                  "type": "object"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "stripe_customer_id": {
+                  "type": "string"
+                }
               }
             }
           }
