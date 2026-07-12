@@ -3112,6 +3112,54 @@
             "description": "Success"
           }
         }
+      },
+      "post": {
+        "summary": "Report Event",
+        "description": "Report an event for metered billing or analytics.",
+        "tags": [
+          "Miscellaneous"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "eventName": {
+                    "type": "string"
+                  },
+                  "eventData": {
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "eventName"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/subscription-invoices/{id}": {
@@ -4952,8 +5000,12 @@
             "type": "integer"
           },
           "expires_at": {
-            "type": "string",
-            "format": "date-time"
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "nullable": true
           },
           "created_at": {
             "type": "string",
