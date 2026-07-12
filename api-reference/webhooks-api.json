@@ -3566,42 +3566,6 @@
         }
       }
     },
-    "coupon.created": {
-      "post": {
-        "summary": "Coupon Created",
-        "description": "Triggered when coupon created happens.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "type": {
-                    "type": "string",
-                    "example": "coupon.created"
-                  },
-                  "created_at": {
-                    "type": "string",
-                    "format": "date-time"
-                  },
-                  "data": {
-                    "type": "object"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Webhook received successfully."
-          }
-        }
-      }
-    },
     "audience.subscriber_added": {
       "post": {
         "summary": "Audience Subscriber_added",
@@ -3978,6 +3942,42 @@
                   "type": {
                     "type": "string",
                     "example": "invoice.finalized"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "data": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook received successfully."
+          }
+        }
+      }
+    },
+    "discount.created": {
+      "post": {
+        "summary": "Coupon Created",
+        "description": "Triggered when coupon created happens.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "example": "coupon.created"
                   },
                   "created_at": {
                     "type": "string",
