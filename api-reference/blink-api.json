@@ -2771,6 +2771,169 @@
           }
         }
       }
+    },
+    "/v1/subscriptions": {
+      "get": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "summary": "List subscriptions",
+        "description": "Retrieves a list of all subscriptions for a given store. Supports filtering by status, customer ID, and product ID. Includes pagination.\n\n**Business Use-case:** Useful for managing and analyzing all active and past subscriptions.\n\n**Query Parameters:**\n- `x-store-id`: Store identifier (header, required).\n- `limit`: Limit the number of subscriptions retrieved.\n- `status`: Filter by subscription status.\n- `customer_id`: Filter by customer ID.\n- `product_id`: Filter by product ID.\n\n**Responses:**\n- `200`: Subscriptions retrieved successfully.\n- `401`: Unauthorized if `x-store-id` is missing.",
+        "parameters": [
+          {
+            "name": "x-store-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customer_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscriptions list retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionsListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/v1/subscriptions/{id}": {
+      "get": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "summary": "Retrieve subscription details",
+        "description": "Fetches detailed information about a specific subscription. Includes product and variant details associated with the subscription.\n\n**Business Use-case:** Useful for understanding customer subscriptions and managing their lifecycle.\n\n**Path Parameters:**\n- `id`: Subscription ID (path parameter, required).\n\n**Responses:**\n- `200`: Subscription details retrieved successfully.\n- `401`: Unauthorized if `x-store-id` is missing.\n- `404`: Not Found if the subscription does not exist.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-store-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionDetailResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "summary": "Update subscription status",
+        "description": "Updates the status of a subscription, allowing actions such as cancelation, immediate cancelation, or resumption.\n\n**Business Use-case:** Useful for managing the lifecycle of subscriptions, including cancelation and resumption.\n\n**Path Parameters:**\n- `id`: Subscription ID (path parameter, required).\n\n**Request Body:**\n- `action`: The action to perform on the subscription (required: `cancel`, `cancel_immediately`, or `resume`).\n\n**Responses:**\n- `200`: Subscription updated successfully.\n- `400`: Bad request if action is invalid.\n- `401`: Unauthorized if `x-store-id` is missing.\n- `404`: Not Found if the subscription does not exist.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-store-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubscriptionUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Subscription updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionDetailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3734,7 +3897,8 @@
                 "type": "string",
                 "enum": [
                   "classic",
-                  "overlay", "inline",
+                  "overlay",
+                  "inline",
                   "split",
                   "minimal"
                 ],
@@ -5822,7 +5986,8 @@
             "type": "string",
             "enum": [
               "classic",
-              "overlay", "inline",
+              "overlay",
+              "inline",
               "split",
               "minimal"
             ],
@@ -5883,6 +6048,63 @@
               "selection_background": {
                 "type": "string",
                 "description": "Background color for selected states."
+              }
+            }
+          }
+        }
+      },
+      "SubscriptionsListResponse": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer"
+              }
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "store_id": {
+                  "type": "string"
+                },
+                "product_id": {
+                  "type": "string"
+                },
+                "variant_id": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "current_period_end": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "cancel_at_period_end": {
+                  "type": "boolean"
+                },
+                "metadata": {
+                  "type": "object"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "stripe_customer_id": {
+                  "type": "string"
+                }
               }
             }
           }
