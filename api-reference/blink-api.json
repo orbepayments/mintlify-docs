@@ -3189,6 +3189,238 @@
           }
         }
       }
+    },
+    "/invoices": {
+      "get": {
+        "summary": "List Invoices",
+        "description": "Retrieve a unified list of chronological invoices, aggregating both one-time product orders and recurring subscription invoices.",
+        "operationId": "listInvoices",
+        "tags": [
+          "Invoices"
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            },
+            "description": "Number of records to return"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "product",
+                "subscription"
+              ]
+            },
+            "description": "Filter by product or subscription invoices"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by invoice status (e.g. paid, open)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of unified invoices",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "invoice_number": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "customer_id": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "total_amount": {
+                            "type": "integer",
+                            "description": "Amount in cents"
+                          },
+                          "tax_amount": {
+                            "type": "integer",
+                            "description": "Amount in cents"
+                          },
+                          "net_amount": {
+                            "type": "integer",
+                            "description": "Amount in cents"
+                          },
+                          "currency": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "pdf_url": {
+                            "type": "string"
+                          },
+                          "hosted_invoice_url": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/invoices/{id}": {
+      "get": {
+        "summary": "Get Invoice",
+        "description": "Retrieve detailed information for a specific invoice, fully populated with customer and product relations.",
+        "operationId": "getInvoice",
+        "tags": [
+          "Invoices"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The UUID of the invoice (order or subscription_invoice id)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Invoice details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "invoice_number": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "customer_id": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "total_amount": {
+                          "type": "integer"
+                        },
+                        "tax_amount": {
+                          "type": "integer"
+                        },
+                        "net_amount": {
+                          "type": "integer"
+                        },
+                        "currency": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "string"
+                        },
+                        "pdf_url": {
+                          "type": "string"
+                        },
+                        "customer": {
+                          "type": "object",
+                          "description": "Expanded customer relation"
+                        },
+                        "product": {
+                          "type": "object",
+                          "description": "Expanded product relation"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Invoice not found"
+          }
+        }
+      }
+    },
+    "/invoices/{id}/pdf": {
+      "get": {
+        "summary": "Download Invoice PDF",
+        "description": "Streams a dynamically generated application/pdf buffer directly to the client. Returns 200 OK with Content-Disposition attachment.",
+        "operationId": "downloadInvoicePdf",
+        "tags": [
+          "Invoices"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The UUID of the invoice"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PDF file buffer",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Invoice not found"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -6370,6 +6602,12 @@
   "security": [
     {
       "storeIdHeader": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Invoices",
+      "description": "Unified merchant of record invoices for products and subscriptions."
     }
   ]
 }
