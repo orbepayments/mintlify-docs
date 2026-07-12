@@ -5000,12 +5000,8 @@
             "type": "integer"
           },
           "expires_at": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "format": "date-time",
-            "nullable": true
+            "type": "string",
+            "format": "date-time"
           },
           "created_at": {
             "type": "string",
