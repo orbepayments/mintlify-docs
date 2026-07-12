@@ -3421,6 +3421,77 @@
           }
         }
       }
+    },
+    "/geo-pricing": {
+      "get": {
+        "summary": "Resolve Geo Pricing",
+        "description": "Retrieve the localized discount percentage for a buyer based on the store's Geo Pricing (Purchasing Power Parity) configuration. Supports explicit country code resolution for server-side calls, and automatic IP fallback for client-side calls.",
+        "operationId": "getGeoPricing",
+        "tags": [
+          "Geo Pricing"
+        ],
+        "parameters": [
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The 2-letter ISO country code of the buyer (e.g., `BR`, `IN`). If omitted, the API will automatically resolve the buyer's location via their IP address."
+          },
+          {
+            "name": "product_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "If provided, checks if geo-pricing is explicitly disabled for this specific product, returning a 0% discount if opted out."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The calculated geo-pricing discount",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "discount_percentage": {
+                          "type": "integer",
+                          "description": "The percentage discount to apply to the product's base price (e.g. 40)."
+                        },
+                        "country_code": {
+                          "type": "string",
+                          "description": "The 2-letter ISO country code that was resolved."
+                        },
+                        "country_name": {
+                          "type": "string",
+                          "description": "The full name of the resolved country."
+                        },
+                        "is_enabled": {
+                          "type": "boolean",
+                          "description": "Whether the store has globally enabled geo-pricing."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Store or Product not found"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -6608,6 +6679,10 @@
     {
       "name": "Invoices",
       "description": "Unified merchant of record invoices for products and subscriptions."
+    },
+    {
+      "name": "Geo Pricing",
+      "description": "Resolve Purchasing Power Parity (PPP) localized pricing."
     }
   ]
 }
