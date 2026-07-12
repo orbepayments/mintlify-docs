@@ -1,0 +1,66 @@
+---
+title: "Webhook Events"
+description: "A complete reference of all webhook events supported by Blink."
+---
+
+When you register a webhook endpoint, you can subscribe to specific events. Below is the comprehensive list of all events you can listen for across the Blink platform.
+
+## Products
+| Event Name | Description |
+|---|---|
+| `product.created` | Fired when a new product is created in your store. |
+| `product.updated` | Fired when a product's details or settings are modified. |
+| `product.archived` | Fired when a product is archived or deleted. |
+
+## Discounts & Coupons
+| Event Name | Description |
+|---|---|
+| `discount.created` | Fired when a new discount coupon is generated. |
+| `discount.updated` | Fired when an existing coupon is modified. |
+
+## Customers
+| Event Name | Description |
+|---|---|
+| `customer.created` | Fired when a new customer is added to your audience. |
+| `customer.updated` | Fired when a customer's details are updated. |
+
+## Checkouts
+| Event Name | Description |
+|---|---|
+| `checkout.created` | Fired when a new checkout session is initiated. |
+| `checkout.completed` | Fired when a checkout session is successfully paid. |
+| `checkout.expired` | Fired when a checkout session expires without payment. |
+
+## Orders
+| Event Name | Description |
+|---|---|
+| `order.created` | Fired when an order is placed. |
+| `order.paid` | Fired when an order payment succeeds. |
+| `order.refunded` | Fired when an order is refunded. |
+
+## Subscriptions
+| Event Name | Description |
+|---|---|
+| `subscription.created` | Fired when a new subscription is started. |
+| `subscription.updated` | Fired when a subscription plan or status changes. |
+| `subscription.canceled` | Fired when a subscription is canceled. |
+| `subscription.active` | Fired when a subscription becomes active. |
+| `subscription.past_due` | Fired when a subscription payment fails and becomes past due. |
+
+## License Keys
+| Event Name | Description |
+|---|---|
+| `license_key.created` | Fired when a new license key is generated. |
+| `license_key.revoked` | Fired when a license key is revoked. |
+
+## Affiliates
+| Event Name | Description |
+|---|---|
+| `affiliate.approved` | Fired when an affiliate application is approved. |
+| `affiliate.conversion` | Fired when an affiliate successfully refers a sale. |
+
+## Abandoned Carts
+| Event Name | Description |
+|---|---|
+| `abandoned_cart.created` | Fired when an abandoned cart is detected. |
+| `abandoned_cart.recovered` | Fired when a recovery email is sent or a cart is recovered. |

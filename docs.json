@@ -117,6 +117,9 @@
           },
           {
             "group": "Webhooks & Events",
+            "pages": [
+              "api-reference/webhook-events"
+            ],
             "openapi": "api-reference/webhooks-api.json"
           }
         ],
