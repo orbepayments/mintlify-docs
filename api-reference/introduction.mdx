@@ -3,18 +3,24 @@ title: "API Overview"
 description: "Base URLs, authentication, pagination, rate limits, and the difference between the core APIs."
 ---
 
-Welcome to the Blink API! Our suite of APIs provides everything you need to build, manage, and scale your storefront programmatically. 
+<Warning>
+</Warning>
+
+Welcome to the Blink API! Our suite of APIs provides everything you need to build, manage, and scale your storefront programmatically.
 
 <CardGroup cols={2}>
   <Card title="Blink API" icon="server">
     The main server-to-server API for merchants to manage checkouts, products, and store settings.
   </Card>
+
   <Card title="Shopper API" icon="user">
     Customer-token authenticated endpoints used to power customer-facing dashboards.
   </Card>
+
   <Card title="Growth API" icon="trending-up">
     Marketing, affiliates, abandoned carts, and upselling tools.
   </Card>
+
   <Card title="Webhooks & Events" icon="webhook">
     Event tracking, webhook management, and store analytics.
   </Card>
@@ -28,6 +34,7 @@ The Blink API is organized around REST. Our API has predictable resource-oriente
   <Card title="Production Base URL" icon="globe">
     `https://api.blink.store/v1`
   </Card>
+
   <Card title="Sandbox Base URL" icon="flask">
     `https://sandbox-api.blink.store/v1`
   </Card>
@@ -42,6 +49,7 @@ The Blink API is organized around REST. Our API has predictable resource-oriente
 Blink uses different types of authentication tokens depending on the API you are accessing.
 
 ### Merchant Secret Keys (Blink API, Growth API)
+
 For server-to-server interactions, authenticate requests using your Store Secret Key. You can view and manage your API keys in the Blink Dashboard. **Do not share your secret API keys in publicly accessible areas such as GitHub, or client-side code.**
 
 Authentication to the API is performed via HTTP Bearer Auth.
@@ -51,6 +59,7 @@ Authorization: Bearer blink_live_xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 ### Customer Tokens (Shopper API)
+
 For the Shopper API, you authenticate using a temporary Customer Token granted when a shopper logs into their customer portal. This token only grants access to data owned by that specific customer.
 
 ```bash
@@ -66,7 +75,7 @@ Authorization: Bearer cus_xxxxxxxxxxxxxxxxxxxxxxxxxxx
 It's important to use the correct API and token for your use-case.
 
 | Feature | Blink API | Shopper API |
-| :--- | :--- | :--- |
+| :-- | :-- | :-- |
 | **Authentication** | Merchant Secret Key (`blink_live_...`) | Customer Token (`cus_...`) |
 | **Use Case** | Server-side logic, admin dashboards, syncing data. | Client-side customer portals, mobile apps for buyers. |
 | **Permissions** | Full read/write access to your entire store. | Read/write access strictly limited to a single customer. |
@@ -79,7 +88,7 @@ All top-level API resources have support for bulk fetches via "list" API methods
 ### Query Parameters
 
 | Parameter | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
+| :-- | :-- | :-- | :-- |
 | `page` | `integer` | `1` | The page number to retrieve. |
 | `limit` | `integer` | `50` | The number of items to return per page. Max `100`. |
 
@@ -109,8 +118,7 @@ A paginated response will always wrap the results in a `data` array and include 
 
 To prevent abuse, Blink limits the number of API requests you can make in a given timeframe.
 
-* **Production**: 100 requests per second
-* **Sandbox**: 50 requests per second
+- **Production**: 100 requests per second
+- **Sandbox**: 50 requests per second
 
 If you exceed these limits, the API will return a `429 Too Many Requests` status code.
-
