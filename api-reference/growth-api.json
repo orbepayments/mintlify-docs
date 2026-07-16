@@ -2654,10 +2654,7 @@
                 "type": "string"
               },
               "hosted_invoice_url": {
-                "type": [
-                  "string",
-                  "null"
-                ]
+                "type": "string"
               },
               "related_entity_id": {
                 "type": "string"
@@ -2742,10 +2739,7 @@
                   "type": "string"
                 },
                 "hosted_invoice_url": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
+                  "type": "string"
                 },
                 "related_entity_id": {
                   "type": "string"
