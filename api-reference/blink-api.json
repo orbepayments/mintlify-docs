@@ -3476,8 +3476,7 @@
             "description": "The name of the checkout link."
           },
           "design": {
-            "type": "object",
-            "description": "Design settings for the checkout link."
+            "$ref": "#/components/schemas/CheckoutDesign"
           },
           "status": {
             "type": "string",
@@ -3501,7 +3500,7 @@
             "type": "string"
           },
           "design": {
-            "type": "object"
+            "$ref": "#/components/schemas/CheckoutDesign"
           },
           "status": {
             "type": "string"
@@ -3526,8 +3525,7 @@
             "description": "Updated name of the checkout link."
           },
           "design": {
-            "type": "object",
-            "description": "Updated design settings."
+            "$ref": "#/components/schemas/CheckoutDesign"
           },
           "status": {
             "type": "string",
@@ -5859,6 +5857,81 @@
           },
           "license_key_activation_limit": {
             "type": "integer"
+          }
+        }
+      },
+      "CheckoutDesign": {
+        "type": "object",
+        "description": "Configuration for the visual layout, display options, and colors of a custom checkout.",
+        "properties": {
+          "layout": {
+            "type": "string",
+            "enum": [
+              "classic",
+              "overlay",
+              "inline",
+              "split",
+              "minimal"
+            ],
+            "description": "The overall layout structure of the checkout page. `classic` is standard, `overlay` highlights product imagery, `inline` embeds the form, `split` divides into two columns, and `minimal` removes all distractions."
+          },
+          "display_options": {
+            "type": "object",
+            "properties": {
+              "preview_button": {
+                "type": "boolean",
+                "description": "Show a preview button next to the product title."
+              },
+              "discount_code": {
+                "type": "boolean",
+                "description": "Show a discount input field at checkout."
+              },
+              "refund_policy": {
+                "type": "boolean",
+                "description": "Display a refund policy link in the footer."
+              }
+            }
+          },
+          "override_theme": {
+            "type": "boolean",
+            "description": "If true, ignores the global store theme and uses the custom colors defined below."
+          },
+          "colors": {
+            "type": "object",
+            "properties": {
+              "button": {
+                "type": "string",
+                "description": "Primary button color."
+              },
+              "button_hover": {
+                "type": "string",
+                "description": "Button color when hovered."
+              },
+              "button_text": {
+                "type": "string",
+                "description": "Text color inside buttons."
+              },
+              "button_text_hover": {
+                "type": "string",
+                "description": "Text color when hovering over buttons."
+              },
+              "link": {
+                "type": "string",
+                "description": "Color for clickable links."
+              },
+              "checkbox": {
+                "type": "string",
+                "description": "Color of variants checkbox."
+              },
+              "selection_border": {
+                "type": "string",
+                "description": "Border color for selected variants/methods."
+              },
+              "selection_background": {
+                "type": "string",
+                "description": "Background color for selected states."
+              }
+            }
           }
         }
       }
