@@ -112,6 +112,7 @@
         "tab": "API",
         "pages": [
           "api-reference/introduction",
+          "api-reference/embedded-checkout",
           {
             "group": "Blink API",
             "openapi": "api-reference/blink-api.json"

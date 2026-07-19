@@ -1,0 +1,43 @@
+---
+title: "Embedded Checkout"
+description: "Integrate Blink's embedded overlay checkout programmatically in your application."
+---
+
+To use the embedded checkout on your custom website or web app, you need to include our embed script and use the provided JavaScript API. This allows you to keep users in context and reduce friction.
+
+## **1. Add the Embed Script**
+
+Include the following script tag anywhere in your HTML (preferably right before the closing `</body>` tag):
+
+```html
+<script src="https://js.blink.store/embed.js"></script>
+```
+
+<Note>
+**Modern Frameworks (React, Next.js, etc.)**
+If you are using a modern SPA framework like Next.js, do not use a raw HTML `<script>` tag. Instead, use your framework's built-in script loader (e.g., `import Script from 'next/script'` and `<Script src="https://js.blink.store/embed.js" strategy="afterInteractive" />`) to ensure the script loads reliably across client-side navigations.
+</Note>
+
+## **2. Using the JavaScript API**
+
+Once the script is loaded, it automatically binds to any clickable element with the class `blink-button`.
+
+### **Automatic Binding (HTML)**
+```html
+<a href="https://yourstore.blink.store/product-slug" class="blink-button">Buy Now</a>
+```
+
+### **Programmatic Binding (React / Next.js)**
+If you are building a Single Page Application (SPA) where you need to trigger the checkout programmatically, the script exposes a global `window.Blink` object:
+
+```javascript
+// Trigger the checkout overlay manually
+window.Blink.openCheckout('https://yourstore.blink.store/product-slug');
+
+// Close the overlay manually
+window.Blink.closeCheckout();
+```
+
+<Note>
+When generating the checkout URL dynamically via the API (`POST /v1/checkouts`), ensure you pass `"options": { "layout": "overlay" }` in the payload. Our `embed.js` script will automatically handle formatting the URL correctly to trigger the embed mode.
+</Note>
