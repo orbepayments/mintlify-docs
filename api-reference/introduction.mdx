@@ -53,10 +53,11 @@ Blink uses different types of authentication tokens depending on the API you are
 
 For server-to-server interactions, authenticate requests using your Store Secret Key. You can view and manage your API keys in the Blink Dashboard. **Do not share your secret API keys in publicly accessible areas such as GitHub, or client-side code.**
 
-Authentication to the API is performed via HTTP Bearer Auth.
+Authentication to the API is performed via HTTP Bearer Auth. In addition to the Bearer token, **all requests must include the `x-store-id` header** to specify which store you are interacting with.
 
 ```bash
 Authorization: Bearer blink_live_xxxxxxxxxxxxxxxxxxxxxxxxxxx
+x-store-id: str_xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 ### Customer Tokens (Shopper API)

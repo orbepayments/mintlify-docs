@@ -5154,7 +5154,8 @@
                   "overlay",
                   "minimal",
                   "inline"
-                ]
+                ],
+                "description": "The layout template to use for this checkout. If you intend to use the overlay script (`embed.js`), you **must** set this to `overlay` to return the correct URL parameters. Otherwise the overlay script will fail."
               },
               "hide_carousel": {
                 "type": "boolean"
