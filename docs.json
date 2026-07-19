@@ -109,14 +109,6 @@
             "openapi": "api-reference/blink-api.json"
           },
           {
-            "group": "Shopper API",
-            "openapi": "api-reference/shopper-api.json"
-          },
-          {
-            "group": "Growth API",
-            "openapi": "api-reference/growth-api.json"
-          },
-          {
             "group": "Webhooks & Events",
             "pages": [
               "api-reference/webhook-events"
@@ -148,28 +140,8 @@
       "vscode"
     ]
   },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/blinkdotstore"
-    }
-  },
-  "appearance": {
-    "strict": true,
-    "default": "dark",
-    "banner": "Welcome to Blink documentation"
-  },
-  "logo": "/images/blink_dark_mode_icon.svg",
-  "favicon": "/images/blink_dark_mode_icon.svg",
-  "fonts": {
-    "family": "Inter"
-  },
-  "icons": {
-    "library": "lucide"
-  },
   "openapi": [
     "api-reference/blink-api.json",
-    "api-reference/shopper-api.json",
-    "api-reference/growth-api.json",
     "api-reference/webhooks-api.json"
   ]
 }
