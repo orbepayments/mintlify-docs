@@ -14,11 +14,11 @@
     }
   },
   "logo": {
-    "dark": "/images/x-profile.png",
-    "light": "/images/x-profile.png"
+    "dark": "/images/blink_dark_mode_full.svg",
+    "light": "/images/blink_dark_mode_full.svg"
   },
   "favicon": {
-    "light": "/images/x-profile.png",
+    "light": "/images/blink-mail-product.png",
     "dark": "/favicon.svg"
   },
   "navigation": {
