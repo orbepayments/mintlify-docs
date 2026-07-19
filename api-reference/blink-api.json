@@ -1465,182 +1465,6 @@
         }
       }
     },
-    "/files/{id}/download": {
-      "get": {
-        "tags": [
-          "Files"
-        ],
-        "summary": "Generate a download URL for a file",
-        "description": "Generates a time-limited pre-signed URL for downloading a specific file.\n\n**Parameters:**\n- `id`: The ID of the file (path parameter, required).\n- `x-store-id`: Store identifier (header parameter, required).\n- `expires_in`: Duration in seconds the URL will be valid for (query parameter, optional, default 3600, max 86400).\n\n**Responses:**\n- `200`: File download URL generated successfully.\n- `400`: Bad Request if file is not downloadable or other validation fails.\n- `401`: Unauthorized if the `x-store-id` header is missing.\n- `404`: Not Found if the file does not exist.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "x-store-id",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "expires_in",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "default": 3600
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Download URL generated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FileDownloadResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/files/{id}": {
-      "get": {
-        "tags": [
-          "Files"
-        ],
-        "summary": "Retrieve file details",
-        "description": "Fetch detailed information about a file by its ID. This endpoint requires the `x-store-id` in the headers to verify ownership. Successfully retrieves information such as file title, description, URL, and creation date. Useful for accessing and managing deliverables associated with specific products or variants.\n\n**Parameters:**\n- `id`: File ID (path parameter).\n\n**Responses:**\n- `200`: File details retrieved.\n- `401`: Unauthorized if `x-store-id` header is missing.\n- `404`: Not Found if the file does not exist or ID is not associated with the store ID.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "File details retrieved",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FileDetailResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Files"
-        ],
-        "summary": "Delete a file",
-        "description": "Deletes a file by its ID after ensuring ownership via `x-store-id`. This action is irreversible and should be used with caution. It checks if the file exists and belongs to the correct store before deletion.\n\n**Parameters:**\n- `id`: File ID (path parameter).\n\n**Responses:**\n- `200`: File deleted successfully.\n- `401`: Unauthorized if `x-store-id` header is missing.\n- `404`: Not Found if the file does not exist or ID is not associated with the store ID.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "File deleted",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FileDeleteResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/files": {
-      "get": {
-        "tags": [
-          "Files"
-        ],
-        "summary": "List files",
-        "description": "Retrieve a list of files (deliverables) associated with a store, filtered optionally by product or variant ID. The endpoint supports pagination and requires a valid `x-store-id` in the headers for authentication.\n\n**Query Parameters:**\n- `product_id`: Filter files by specific product ID.\n- `variant_id`: Filter files by specific variant ID.\n- `limit`: Number of items to retrieve (default 50, max 100).\n\n**Responses:**\n- `200`: List of files retrieved successfully.\n- `401`: Unauthorized if `x-store-id` header is missing.",
-        "parameters": [
-          {
-            "name": "product_id",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "variant_id",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "default": 50
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Files list retrieved",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FileListResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        }
-      }
-    },
     "/license-keys/{id}/revoke": {
       "post": {
         "tags": [
@@ -4258,6 +4082,260 @@
           },
           "401": {
             "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/deliverables": {
+      "get": {
+        "tags": [
+          "Deliverables"
+        ],
+        "summary": "List deliverables",
+        "description": "Retrieve a list of files (deliverables) associated with a store, filtered optionally by product or variant ID. The endpoint supports pagination and requires a valid `x-store-id` in the headers for authentication.\n\n**Query Parameters:**\n- `product_id`: Filter files by specific product ID.\n- `variant_id`: Filter files by specific variant ID.\n- `limit`: Number of items to retrieve (default 50, max 100).\n\n**Responses:**\n- `200`: List of files retrieved successfully.\n- `401`: Unauthorized if `x-store-id` header is missing.",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "variant_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Files list retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/deliverables/{id}": {
+      "get": {
+        "tags": [
+          "Deliverables"
+        ],
+        "summary": "Get deliverable",
+        "description": "Fetch detailed information about a file by its ID. This endpoint requires the `x-store-id` in the headers to verify ownership. Successfully retrieves information such as file title, description, URL, and creation date. Useful for accessing and managing deliverables associated with specific products or variants.\n\n**Parameters:**\n- `id`: File ID (path parameter).\n\n**Responses:**\n- `200`: File details retrieved.\n- `401`: Unauthorized if `x-store-id` header is missing.\n- `404`: Not Found if the file does not exist or ID is not associated with the store ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File details retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileDetailResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Deliverables"
+        ],
+        "summary": "Delete deliverable",
+        "description": "Deletes a file by its ID after ensuring ownership via `x-store-id`. This action is irreversible and should be used with caution. It checks if the file exists and belongs to the correct store before deletion.\n\n**Parameters:**\n- `id`: File ID (path parameter).\n\n**Responses:**\n- `200`: File deleted successfully.\n- `401`: Unauthorized if `x-store-id` header is missing.\n- `404`: Not Found if the file does not exist or ID is not associated with the store ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileDeleteResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/deliverables/{id}/download": {
+      "get": {
+        "tags": [
+          "Deliverables"
+        ],
+        "summary": "Generate download URL",
+        "description": "Generates a time-limited pre-signed URL for downloading a specific file.\n\n**Parameters:**\n- `id`: The ID of the file (path parameter, required).\n- `x-store-id`: Store identifier (header parameter, required).\n- `expires_in`: Duration in seconds the URL will be valid for (query parameter, optional, default 3600, max 86400).\n\n**Responses:**\n- `200`: File download URL generated successfully.\n- `400`: Bad Request if file is not downloadable or other validation fails.\n- `401`: Unauthorized if the `x-store-id` header is missing.\n- `404`: Not Found if the file does not exist.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-store-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expires_in",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 3600
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Download URL generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileDownloadResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/orders/{id}/deliverables": {
+      "get": {
+        "summary": "List all deliverables for an order",
+        "description": "Retrieves the complete fulfillment payload for a specific order. This is the ultimate fulfillment endpoint for custom storefronts. It automatically generates 1-hour secure pre-signed URLs for any file downloads, fetches any License Keys auto-generated during checkout, and returns dynamic claim URLs for Discord integrations.\n\n**Scenario Use Case:** A company building a custom 'My Library' or 'All Access' dashboard where buyers log in to access their purchased goods securely.",
+        "tags": [
+          "Orders",
+          "Fulfillment"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the order"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of deliverables unlocked by this order"
+          }
+        }
+      }
+    },
+    "/orders/{id}/deliverables/resend": {
+      "post": {
+        "summary": "Resend automatic fulfillment receipt",
+        "description": "Programmatically triggers Blink's automatic fulfillment email to the buyer of this order. This email contains their secure download links, license keys, and order receipt.\n\n**Scenario Use Case:** A seller with a custom support dashboard wants to build a one-click 'Resend Receipt' button for their customer support team when a buyer says they didn't receive their email.",
+        "tags": [
+          "Orders",
+          "Fulfillment"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the order"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email queued successfully"
+          }
+        }
+      }
+    },
+    "/portal/orders/{id}/deliverables": {
+      "get": {
+        "summary": "List deliverables (Customer Portal)",
+        "description": "Retrieves the complete fulfillment payload for an order, authenticated via the Customer Portal JWT. This allows buyers to securely access their downloads, license keys, and Discord roles directly from the frontend without routing through your custom backend.\n\n**Scenario Use Case:** You are rendering a 'My Purchases' page in React and want to fetch the buyer's files directly from the browser using their session token.",
+        "tags": [
+          "Customer Portal",
+          "Fulfillment"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the order"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of deliverables unlocked by this order"
           }
         }
       }
