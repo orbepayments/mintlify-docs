@@ -15,9 +15,12 @@
   },
   "logo": {
     "dark": "/images/x-profile.png",
-    "light": "/logo/light.svg"
+    "light": "/images/x-profile.png"
   },
-  "favicon": "/favicon.svg",
+  "favicon": {
+    "light": "/images/x-profile.png",
+    "dark": "/favicon.svg"
+  },
   "navigation": {
     "tabs": [
       {
