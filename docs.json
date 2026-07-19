@@ -14,8 +14,8 @@
     }
   },
   "logo": {
-    "dark": "/images/blink_dark_mode_full.svg",
-    "light": "/images/blink_dark_mode_full.svg"
+    "dark": "/images/blink-logo-light.svg",
+    "light": "/images/blink-logo-dark.svg"
   },
   "favicon": {
     "light": "/images/blink-mail-product.png",
