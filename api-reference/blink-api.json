@@ -4340,6 +4340,50 @@
           }
         }
       }
+    },
+    "/v1/payouts/{id}": {
+      "get": {
+        "summary": "Retrieve a payout",
+        "description": "Retrieves the details of an existing payout.",
+        "tags": [
+          "Payouts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the payout to retrieve.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved payout details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "The payout object."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Payout not found"
+          }
+        }
+      }
     }
   },
   "components": {
