@@ -17,7 +17,7 @@
           "Abandoned Carts"
         ],
         "summary": "Manually trigger recovery email",
-        "description": "This endpoint allows you to manually trigger a recovery email for an abandoned cart specified by its ID. It checks the cart's status, and if it hasn't been recovered, it will regenerate the recovery URL using the Stripe checkout session and dispatch a recovery email to the customer. It increments the recovery email sent counter regardless of email success.\n\n**Business Use-case:** Useful when you want to manually re-initiate the recovery process for a specific cart.",
+        "description": "This endpoint allows you to manually trigger a recovery email for an abandoned cart specified by its ID. It checks the cart's status, and if it hasn't been recovered, it will regenerate the recovery URL using the Blink checkout session and dispatch a recovery email to the customer. It increments the recovery email sent counter regardless of email success.\n\n**Usage:** Useful when you want to manually re-initiate the recovery process for a specific cart.",
         "parameters": [
           {
             "name": "id",
@@ -57,7 +57,7 @@
           "Abandoned Carts"
         ],
         "summary": "Retrieve abandoned cart details",
-        "description": "Retrieves details of a specific abandoned cart using its ID. The response includes information about the cart, such as customer email, status, and product details.\n\n**Business Use-case:** Use this endpoint to view details of a forgotten cart, aiding in customer follow-up or analytics.",
+        "description": "Retrieves details of a specific abandoned cart using its ID. The response includes information about the cart, such as customer email, status, and product details.\n\n**Usage:** Use this endpoint to view details of a forgotten cart, aiding in customer follow-up or analytics.",
         "parameters": [
           {
             "name": "id",
@@ -94,7 +94,7 @@
           "Abandoned Carts"
         ],
         "summary": "List all abandoned carts",
-        "description": "Lists all abandoned carts for a store with optional filtering by cart status or product ID. Supports pagination.\n\n**Business Use-case:** Retrieve a list of all forgotten carts for a store. This can help in analyzing trends and planning follow-up strategies.",
+        "description": "Lists all abandoned carts for a store with optional filtering by cart status or product ID. Supports pagination.\n\n**Usage:** Retrieve a list of all forgotten carts for a store. This can help in analyzing trends and planning follow-up strategies.",
         "parameters": [
           {
             "name": "status",
@@ -155,7 +155,7 @@
           "Abandoned Carts"
         ],
         "summary": "Trigger a recovery email",
-        "description": "Manually sends a recovery email for a specified abandoned cart. This endpoint can be used to re-initiate customer communication for carts awaiting recovery.\n\n**Business Use-case:** Directly reach out to customers who have left items in their carts, potentially increasing order completion rates.",
+        "description": "Manually sends a recovery email for a specified abandoned cart. This endpoint can be used to re-initiate customer communication for carts awaiting recovery.\n\n**Usage:** Directly reach out to customers who have left items in their carts, potentially increasing order completion rates.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -187,7 +187,7 @@
           "Affiliates"
         ],
         "summary": "Get affiliate conversions",
-        "description": "Retrieves a list of orders that are attributed to a specific affiliate based on their membership ID. Provides detailed order information, including the status, amount, and commission.\n\n**Business Use-case:** Allows affiliates to track their performance and commissions by viewing the orders they have influenced.",
+        "description": "Retrieves a list of orders that are attributed to a specific affiliate based on their membership ID. Provides detailed order information, including the status, amount, and commission.\n\n**Usage:** Allows affiliates to track their performance and commissions by viewing the orders they have influenced.",
         "parameters": [
           {
             "name": "id",
@@ -240,7 +240,7 @@
           "Affiliates"
         ],
         "summary": "Retrieve affiliate details",
-        "description": "Retrieves details of a specific affiliate membership using its ID. It includes affiliate profile information and conversion statistics.\n\n**Business Use-case:** Use this to get detailed insights into an individual affiliate's performance, including total revenue and pending commissions.",
+        "description": "Retrieves details of a specific affiliate membership using its ID. It includes affiliate profile information and conversion statistics.\n\n**Usage:** Use this to get detailed insights into an individual affiliate's performance, including total revenue and pending commissions.",
         "parameters": [
           {
             "name": "id",
@@ -275,7 +275,7 @@
           "Affiliates"
         ],
         "summary": "Update affiliate details",
-        "description": "Updates the details of a specific affiliate membership using its ID. You can change the status of the affiliation.\n\n**Business Use-case:** Utilize this endpoint to modify affiliate statuses like changing them to 'approved', 'banned', etc.",
+        "description": "Updates the details of a specific affiliate membership using its ID. You can change the status of the affiliation.\n\n**Usage:** Utilize this endpoint to modify affiliate statuses like changing them to 'approved', 'banned', etc.",
         "parameters": [
           {
             "name": "id",
@@ -324,7 +324,7 @@
           "Affiliates"
         ],
         "summary": "Invite an affiliate",
-        "description": "Programmatically sends an email invitation to a potential affiliate. The email contains a link for joining the affiliate program.\n\n**Business Use-case:** Useful for programatically adding affiliates to expand marketing reach.",
+        "description": "Programmatically sends an email invitation to a potential affiliate. The email contains a link for joining the affiliate program.\n\n**Usage:** Useful for programatically adding affiliates to expand marketing reach.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -360,7 +360,7 @@
           "Affiliates"
         ],
         "summary": "Generate custom affiliate link",
-        "description": "Generates a custom tracking link for an affiliate membership using a specific code.\n\n**Business Use-case:** Allows affiliates to create personalized links that can track their referral traffic and conversions.",
+        "description": "Generates a custom tracking link for an affiliate membership using a specific code.\n\n**Usage:** Allows affiliates to create personalized links that can track their referral traffic and conversions.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -399,7 +399,7 @@
           "Affiliates"
         ],
         "summary": "List affiliates",
-        "description": "Retrieves a list of affiliates for a store, with optional filtering by status and pagination support.\n\n**Business Use-case:** Analyze and manage affiliates for promotional strategies.",
+        "description": "Retrieves a list of affiliates for a store, with optional filtering by status and pagination support.\n\n**Usage:** Analyze and manage affiliates for promotional strategies.",
         "parameters": [
           {
             "name": "status",
@@ -446,7 +446,7 @@
           "Affiliates"
         ],
         "summary": "Update affiliate membership status",
-        "description": "Approves, rejects, or bans an affiliate's application based on the action specified.\n\n**Business Use-case:** Control the participation of affiliates based on their performance or issues.",
+        "description": "Approves, rejects, or bans an affiliate's application based on the action specified.\n\n**Usage:** Control the participation of affiliates based on their performance or issues.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -485,7 +485,7 @@
           "Audience"
         ],
         "summary": "Retrieve audience member details",
-        "description": "Fetches the details of a specific audience member using their ID. This includes personal information and order history.\n\n**Business Use-case:** Utilize this endpoint to get deeper insights into specific customer profiles for personalized marketing strategies.",
+        "description": "Fetches the details of a specific audience member using their ID. This includes personal information and order history.\n\n**Usage:** Utilize this endpoint to get deeper insights into specific customer profiles for personalized marketing strategies.",
         "parameters": [
           {
             "name": "id",
@@ -520,7 +520,7 @@
           "Audience"
         ],
         "summary": "Update audience member details",
-        "description": "Updates the details of a specific audience member using their ID. This can include changes in name or subscription status.\n\n**Business Use-case:** Update customer data for better engagement and communication strategies.",
+        "description": "Updates the details of a specific audience member using their ID. This can include changes in name or subscription status.\n\n**Usage:** Update customer data for better engagement and communication strategies.",
         "parameters": [
           {
             "name": "id",
@@ -567,7 +567,7 @@
           "Audience"
         ],
         "summary": "Unsubscribe audience member",
-        "description": "Marks an audience member as unsubscribed without deleting their order history.\n\n**Business Use-case:** Softly remove customers who wish to opt-out without losing their historical data.",
+        "description": "Marks an audience member as unsubscribed without deleting their order history.\n\n**Usage:** Softly remove customers who wish to opt-out without losing their historical data.",
         "parameters": [
           {
             "name": "id",
@@ -604,7 +604,7 @@
           "Products"
         ],
         "summary": "List store bumps",
-        "description": "Retrieves a list of promotional bumps available in the store. A bump is a special offer or upsell related to a product. The response includes details like the title, description, price, and deliverables.\n\n**Business Use-case:** Utilize this endpoint to analyze or display product upsells and promotions for increasing average order value.",
+        "description": "Retrieves a list of promotional bumps available in the store. A bump is a special offer or upsell related to a product. The response includes details like the title, description, price, and deliverables.\n\n**Usage:** Utilize this endpoint to analyze or display product upsells and promotions for increasing average order value.",
         "parameters": [
           {
             "name": "limit",
@@ -644,7 +644,7 @@
           "Products"
         ],
         "summary": "Create a new bump",
-        "description": "Creates a new promotional bump for the store. Includes details like title, description, and price.\n\n**Business Use-case:** Use this endpoint to create new upsells and promotional offers to increase average order value.",
+        "description": "Creates a new promotional bump for the store. Includes details like title, description, and price.\n\n**Usage:** Use this endpoint to create new upsells and promotional offers to increase average order value.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -680,7 +680,7 @@
           "Checkouts"
         ],
         "summary": "Retrieve checkout session details",
-        "description": "Fetches the status and details of a specific Stripe checkout session using its ID. The session details include URL, status, payment status, customer email, etc.\n\n**Business Use-case:** Use this endpoint to review the status of a checkout session and get necessary details for follow-up actions.",
+        "description": "Fetches the status and details of a specific Blink checkout session using its ID. The session details include URL, status, payment status, customer email, etc.\n\n**Usage:** Use this endpoint to review the status of a checkout session and get necessary details for follow-up actions.",
         "parameters": [
           {
             "name": "id",
@@ -717,7 +717,7 @@
           "Checkouts"
         ],
         "summary": "List checkout sessions",
-        "description": "Retrieves a list of checkout sessions for a store with optional filtering by status. Supports pagination.\n\n**Business Use-case:** Analyze all checkout sessions to monitor activities and trends in your store.",
+        "description": "Retrieves a list of checkout sessions for a store with optional filtering by status. Supports pagination.\n\n**Usage:** Analyze all checkout sessions to monitor activities and trends in your store.",
         "parameters": [
           {
             "name": "status",
@@ -764,7 +764,7 @@
           "Checkouts"
         ],
         "summary": "Create a new checkout session",
-        "description": "Initializes a new Stripe checkout session for a product and returns the session URL. Can be customized with discounts, affiliate codes, and display preferences.\n\n**Business Use-case:** This endpoint is crucial for starting a payment flow and redirecting customers to a payment page.",
+        "description": "Initializes a new Blink checkout session for a product and returns the session URL. Can be customized with discounts, affiliate codes, and display preferences.\n\n**Usage:** This endpoint is crucial for starting a payment flow and redirecting customers to a payment page.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -800,7 +800,7 @@
           "Customers"
         ],
         "summary": "Retrieve customer meter balances",
-        "description": "Provides the balance of credits for each meter associated with a customer. Meters track specific activities or resources, and this endpoint shows how much credit remains.\n\n**Business Use-case:** Useful for analyzing customer usage and planning billing adjustments, if applicable.",
+        "description": "Provides the balance of credits for each meter associated with a customer. Meters track specific activities or resources, and this endpoint shows how much credit remains.\n\n**Usage:** Useful for analyzing customer usage and planning billing adjustments, if applicable.",
         "parameters": [
           {
             "name": "id",
@@ -837,7 +837,7 @@
           "Customers"
         ],
         "summary": "List customer orders",
-        "description": "Retrieves a list of orders made by a specific customer. Includes information such as order status, amount, and product details.\n\n**Business Use-case:** Use this endpoint to manage customer relationships and analyze buying patterns.",
+        "description": "Retrieves a list of orders made by a specific customer. Includes information such as order status, amount, and product details.\n\n**Usage:** Use this endpoint to manage customer relationships and analyze buying patterns.",
         "parameters": [
           {
             "name": "id",
@@ -1353,8 +1353,8 @@
         "tags": [
           "Disputes"
         ],
-        "summary": "List Stripe disputes",
-        "description": "Fetches a list of disputes associated with the store's connected Stripe account. Supports limiting results.",
+        "summary": "List Blink disputes",
+        "description": "Fetches a list of disputes associated with the store's connected Blink account. Supports limiting results.",
         "parameters": [
           {
             "name": "x-store-id",
@@ -1631,7 +1631,7 @@
           "License Keys"
         ],
         "summary": "List license keys",
-        "description": "Retrieves a list of license keys for the store with optional filtering by status, product ID, or order ID. Supports pagination.\n\n**Business Use-case:** Useful for managing license keys issued to customers, including monitoring their status and usage.",
+        "description": "Retrieves a list of license keys for the store with optional filtering by status, product ID, or order ID. Supports pagination.\n\n**Usage:** Useful for managing license keys issued to customers, including monitoring their status and usage.",
         "parameters": [
           {
             "name": "limit",
@@ -1689,7 +1689,7 @@
           "License Keys"
         ],
         "summary": "Validate a license key",
-        "description": "Validates a license key's status, expiration, and activation limits.\n\n**Business Use-case:** Ensures license keys are active and have not reached their usage or expiration limits before they are used.",
+        "description": "Validates a license key's status, expiration, and activation limits.\n\n**Usage:** Ensures license keys are active and have not reached their usage or expiration limits before they are used.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1728,7 +1728,7 @@
           "Meters"
         ],
         "summary": "Retrieve meter details",
-        "description": "Fetches specific details of a meter identified by its ID.\n\n**Business Use-case:** Allows store owners to view and manage the measurement metrics tied to particular activities or resources within their store.",
+        "description": "Fetches specific details of a meter identified by its ID.\n\n**Usage:** Allows store owners to view and manage the measurement metrics tied to particular activities or resources within their store.",
         "parameters": [
           {
             "name": "id",
@@ -1763,7 +1763,7 @@
           "Meters"
         ],
         "summary": "Update meter details",
-        "description": "Updates the details of a specific meter, such as name or unit.\n\n**Business Use-case:** Modify meter configurations to ensure accurate tracking or reporting of metrics.",
+        "description": "Updates the details of a specific meter, such as name or unit.\n\n**Usage:** Modify meter configurations to ensure accurate tracking or reporting of metrics.",
         "parameters": [
           {
             "name": "id",
@@ -1812,7 +1812,7 @@
           "Meters"
         ],
         "summary": "List all meters",
-        "description": "Retrieves a list of all meters within a store, with options for pagination.\n\n**Business Use-case:** Provides a comprehensive view of all meters being tracked, helping in resource management and strategy planning.",
+        "description": "Retrieves a list of all meters within a store, with options for pagination.\n\n**Usage:** Provides a comprehensive view of all meters being tracked, helping in resource management and strategy planning.",
         "parameters": [
           {
             "name": "limit",
@@ -1852,7 +1852,7 @@
           "Meters"
         ],
         "summary": "Create a new meter",
-        "description": "Adds a new meter for tracking a specific event or resource.\n\n**Business Use-case:** Essential for tracking new metrics in order to better understand usage and performance trends within the store.",
+        "description": "Adds a new meter for tracking a specific event or resource.\n\n**Usage:** Essential for tracking new metrics in order to better understand usage and performance trends within the store.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1891,7 +1891,7 @@
           "Metrics"
         ],
         "summary": "Retrieve metrics for revenue, orders, and subscriptions",
-        "description": "Provides statistics for revenue, orders, subscriptions, and customer counts within a given date range.\n\n**Business Use-case:** Use to derive insights into sales performance and customer growth over times specific periods.",
+        "description": "Provides statistics for revenue, orders, subscriptions, and customer counts within a given date range.\n\n**Usage:** Use to derive insights into sales performance and customer growth over times specific periods.",
         "parameters": [
           {
             "name": "start_date",
@@ -1936,7 +1936,7 @@
           "Organizations"
         ],
         "summary": "List all organizations",
-        "description": "Fetches a list of organizations associated with the store identified by `x-store-id`. Supports pagination with `limit` and `page` query parameters. Each organization includes details such as email, organization name, and billing email.\n\n**Business Use-case:** Useful for managing and analyzing organizations linked to your store.",
+        "description": "Fetches a list of organizations associated with the store identified by `x-store-id`. Supports pagination with `limit` and `page` query parameters. Each organization includes details such as email, organization name, and billing email.\n\n**Usage:** Useful for managing and analyzing organizations linked to your store.",
         "parameters": [
           {
             "name": "limit",
@@ -1976,7 +1976,7 @@
           "Organizations"
         ],
         "summary": "Create a new organization",
-        "description": "Creates a new organization within the store using `x-store-id`. Requires `email` and `organization_name`. Optionally accepts `billing_email`, defaulting to the provided `email` if not supplied.\n\n**Business Use-case:** Useful for adding new organizational entities to be associated with your store.",
+        "description": "Creates a new organization within the store using `x-store-id`. Requires `email` and `organization_name`. Optionally accepts `billing_email`, defaulting to the provided `email` if not supplied.\n\n**Usage:** Useful for adding new organizational entities to be associated with your store.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -2011,8 +2011,8 @@
         "tags": [
           "Payouts"
         ],
-        "summary": "List Stripe payouts",
-        "description": "Fetches a list of Stripe payouts for the store identified by `x-store-id`. Requires a connected Stripe account. Supports limiting the result set.\n\n**Business Use-case:** Useful for financial reconciliation and tracking payouts from Stripe.",
+        "summary": "List Blink payouts",
+        "description": "Fetches a list of Blink payouts for the store identified by `x-store-id`. Requires a connected Blink account. Supports limiting the result set.\n\n**Usage:** Useful for financial reconciliation and tracking payouts from Blink.",
         "parameters": [
           {
             "name": "limit",
@@ -2049,7 +2049,7 @@
           "Products"
         ],
         "summary": "Retrieve product details",
-        "description": "Fetches detailed information about a product, including variants and deliverables, for a given product ID. Requires `x-store-id`.\n\n**Business Use-case:** Provides comprehensive insights into a product's configuration, variants, and linked digital deliverables for store management and product cataloging.\n\n**Path",
+        "description": "Fetches detailed information about a product, including variants and deliverables, for a given product ID. Requires `x-store-id`.\n\n**Usage:** Provides comprehensive insights into a product's configuration, variants, and linked digital deliverables for store management and product cataloging.\n\n**Path",
         "parameters": [
           {
             "name": "id",
@@ -2085,7 +2085,7 @@
           "Products"
         ],
         "summary": "Update product details",
-        "description": "Updates an existing product's attributes such as name, price, or status. A product ID is required. Requires `x-store-id`.\n\n**Business Use-case:** Suitable for modifying product listings directly in the store's catalog, allowing for dynamically adjusting product offerings.\n\n**Path",
+        "description": "Updates an existing product's attributes such as name, price, or status. A product ID is required. Requires `x-store-id`.\n\n**Usage:** Suitable for modifying product listings directly in the store's catalog, allowing for dynamically adjusting product offerings.\n\n**Path",
         "parameters": [
           {
             "name": "id",
@@ -2132,7 +2132,7 @@
           "Products"
         ],
         "summary": "Archive a product",
-        "description": "Archives a product by setting its status to 'archived'. This action does not delete the product but prevents it from being sold. Requires `x-store-id`.\n\n**Business Use-case:** Utilized when a product should be temporarily or permanently withdrawn from active sale while keeping its configuration for historical or analytical purposes.\n\n**Path",
+        "description": "Archives a product by setting its status to 'archived'. This action does not delete the product but prevents it from being sold. Requires `x-store-id`.\n\n**Usage:** Utilized when a product should be temporarily or permanently withdrawn from active sale while keeping its configuration for historical or analytical purposes.\n\n**Path",
         "parameters": [
           {
             "name": "id",
@@ -2169,7 +2169,7 @@
           "Products"
         ],
         "summary": "List product variants",
-        "description": "Retrieve a list of all variants associated with a specific product. Requires `x-store-id`.\n\n**Business Use-case:** Useful for detailed inventory management and displaying all available options for a product.\n\n**Path",
+        "description": "Retrieve a list of all variants associated with a specific product. Requires `x-store-id`.\n\n**Usage:** Useful for detailed inventory management and displaying all available options for a product.\n\n**Path",
         "parameters": [
           {
             "name": "id",
@@ -2204,7 +2204,7 @@
           "Products"
         ],
         "summary": "Create a new product variant",
-        "description": "Adds a new variant to a product. Requires `name` and `price`, along with other optional parameters. Requires `x-store-id`.\n\n**Business Use-case:** Valuable for expanding a product's options, such as adding new sizes or colors to a clothing product.\n\n**Path",
+        "description": "Adds a new variant to a product. Requires `name` and `price`, along with other optional parameters. Requires `x-store-id`.\n\n**Usage:** Valuable for expanding a product's options, such as adding new sizes or colors to a clothing product.\n\n**Path",
         "parameters": [
           {
             "name": "id",
@@ -2253,7 +2253,7 @@
           "Products"
         ],
         "summary": "Retrieve product variant details",
-        "description": "Fetches detailed information about a specific product variant. Requires `x-store-id`.\n\n**Business Use-case:** Provides comprehensive insights into a variant's configuration for inventory management and display purposes.\n\n**Path",
+        "description": "Fetches detailed information about a specific product variant. Requires `x-store-id`.\n\n**Usage:** Provides comprehensive insights into a variant's configuration for inventory management and display purposes.\n\n**Path",
         "parameters": [
           {
             "name": "id",
@@ -2296,7 +2296,7 @@
           "Products"
         ],
         "summary": "Update product variant details",
-        "description": "Updates attributes for a specific product variant, such as name, price, or status. Requires `x-store-id`.\n\n**Business Use-case:** Useful for maintaining variant accuracy and availability within the store catalog.\n\n**Path",
+        "description": "Updates attributes for a specific product variant, such as name, price, or status. Requires `x-store-id`.\n\n**Usage:** Useful for maintaining variant accuracy and availability within the store catalog.\n\n**Path",
         "parameters": [
           {
             "name": "id",
@@ -2351,7 +2351,7 @@
           "Products"
         ],
         "summary": "Delete a product variant",
-        "description": "Deletes a specific product variant. This action is irreversible. Requires `x-store-id`.\n\n**Business Use-case:** Suitable for removing specific variant options from a product's offering.\n\n**Path",
+        "description": "Deletes a specific product variant. This action is irreversible. Requires `x-store-id`.\n\n**Usage:** Suitable for removing specific variant options from a product's offering.\n\n**Path",
         "parameters": [
           {
             "name": "id",
@@ -2396,7 +2396,7 @@
           "Products"
         ],
         "summary": "List all products",
-        "description": "Retrieves a list of all products associated with a specific store. Supports pagination and filtering by status and pricing model. This endpoint provides detailed product information including variants and images.\n\n**Business Use-case:** Useful for managing the store's product catalog and reviewing available inventory.",
+        "description": "Retrieves a list of all products associated with a specific store. Supports pagination and filtering by status and pricing model. This endpoint provides detailed product information including variants and images.\n\n**Usage:** Useful for managing the store's product catalog and reviewing available inventory.",
         "parameters": [
           {
             "name": "x-store-id",
@@ -2458,7 +2458,7 @@
           "Products"
         ],
         "summary": "Create a new product",
-        "description": "Creates a new product in the store. Requires detailed product information including name, pricing model, and price. Optionally includes settings for subscription intervals, trial days, and license key configurations.\n\n**Business Use-case:** Adds new products to the store's offerings, supporting different pricing models and configurations.",
+        "description": "Creates a new product in the store. Requires detailed product information including name, pricing model, and price. Optionally includes settings for subscription intervals, trial days, and license key configurations.\n\n**Usage:** Adds new products to the store's offerings, supporting different pricing models and configurations.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -2494,7 +2494,7 @@
           "Refunds"
         ],
         "summary": "List refunds",
-        "description": "Retrieves a list of refunds associated with a store's connected Stripe account. Supports limiting the results.\n\n**Business Use-case:** Useful for financial reconciliation and tracking refund activities within the store.",
+        "description": "Retrieves a list of refunds associated with a store's connected Blink account. Supports limiting the results.\n\n**Usage:** Useful for financial reconciliation and tracking refund activities within the store.",
         "parameters": [
           {
             "name": "x-store-id",
@@ -2539,7 +2539,7 @@
           "Invoices"
         ],
         "summary": "List subscription invoices",
-        "description": "Fetches a list of subscription invoices for the store. Supports filtering by status, subscription ID, and customer ID. Supports pagination.\n\n**Business Use-case:** Useful for tracking and managing subscription invoices and financial records.",
+        "description": "Fetches a list of subscription invoices for the store. Supports filtering by status, subscription ID, and customer ID. Supports pagination.\n\n**Usage:** Useful for tracking and managing subscription invoices and financial records.",
         "parameters": [
           {
             "name": "x-store-id",
@@ -2602,7 +2602,7 @@
           "Subscriptions"
         ],
         "summary": "Retrieve subscription details",
-        "description": "Fetches detailed information about a specific subscription. Includes product and variant details associated with the subscription.\n\n**Business Use-case:** Useful for understanding customer subscriptions and managing their lifecycle.\n\n**Path",
+        "description": "Fetches detailed information about a specific subscription. Includes product and variant details associated with the subscription.\n\n**Usage:** Useful for understanding customer subscriptions and managing their lifecycle.\n\n**Path",
         "parameters": [
           {
             "name": "id",
@@ -2645,7 +2645,7 @@
           "Subscriptions"
         ],
         "summary": "Update subscription status",
-        "description": "Updates the status of a subscription, allowing actions such as cancelation, immediate cancelation, or resumption.\n\n**Business Use-case:** Useful for managing the lifecycle of subscriptions, including cancelation and resumption.\n\n**Path",
+        "description": "Updates the status of a subscription, allowing actions such as cancelation, immediate cancelation, or resumption.\n\n**Usage:** Useful for managing the lifecycle of subscriptions, including cancelation and resumption.\n\n**Path",
         "parameters": [
           {
             "name": "id",
@@ -2702,7 +2702,7 @@
           "Subscriptions"
         ],
         "summary": "List subscriptions",
-        "description": "Retrieves a list of all subscriptions for a given store. Supports filtering by status, customer ID, and product ID. Includes pagination.\n\n**Business Use-case:** Useful for managing and analyzing all active and past subscriptions.",
+        "description": "Retrieves a list of all subscriptions for a given store. Supports filtering by status, customer ID, and product ID. Includes pagination.\n\n**Usage:** Useful for managing and analyzing all active and past subscriptions.",
         "parameters": [
           {
             "name": "x-store-id",
@@ -3044,7 +3044,7 @@
           "Orders"
         ],
         "summary": "List all orders",
-        "description": "Fetches a paginated list of all orders.\n\n**Business Use-case:** Build a custom seller dashboard or sync orders to an external ERP/CRM system automatically.",
+        "description": "Fetches a paginated list of all orders.\n\n**Usage:** Build a custom seller dashboard or sync orders to an external ERP/CRM system automatically.",
         "parameters": [
           {
             "name": "page",
@@ -3110,7 +3110,7 @@
           "Orders"
         ],
         "summary": "Issue a refund",
-        "description": "Programmatically issue a full or partial refund for an order.\n\n**Business Use-case:** Headless event organizers managing bulk ticket cancellations directly from their custom admin panel without logging into Blink.",
+        "description": "Programmatically issue a full or partial refund for an order.\n\n**Usage:** Headless event organizers managing bulk ticket cancellations directly from their custom admin panel without logging into Blink.",
         "parameters": [
           {
             "name": "id",
@@ -3208,7 +3208,7 @@
           "Invoices"
         ],
         "summary": "Download Invoice PDF",
-        "description": "Generates and downloads a secure PDF receipt of the invoice.\n\n**Business Use-case:** Enterprise agencies building custom portals where B2B clients can download their tax-compliant PDF receipts on demand.",
+        "description": "Generates and downloads a secure PDF receipt of the invoice.\n\n**Usage:** Enterprise agencies building custom portals where B2B clients can download their tax-compliant PDF receipts on demand.",
         "parameters": [
           {
             "name": "id",
@@ -3238,7 +3238,7 @@
           "Customer Portal"
         ],
         "summary": "List Customer Orders",
-        "description": "Fetches orders securely for a specific customer authenticated via portal magic link.\n\n**Business Use-case:** Headless apps building completely custom 'My Account' or 'Order History' pages for their buyers.",
+        "description": "Fetches orders securely for a specific customer authenticated via portal magic link.\n\n**Usage:** Headless apps building completely custom 'My Account' or 'Order History' pages for their buyers.",
         "responses": {
           "200": {
             "description": "Successful response"
@@ -3257,8 +3257,8 @@
         "tags": [
           "Customer Portal"
         ],
-        "summary": "Create Stripe Billing Portal Session",
-        "description": "Generates a secure, temporary URL to the Stripe Customer Billing Portal.\n\n**Business Use-case:** SaaS companies allowing their users to update credit cards or cancel subscriptions directly from the company's own custom settings page.",
+        "summary": "Create Blink Billing Portal Session",
+        "description": "Generates a secure, temporary URL to the Blink Customer Billing Portal.\n\n**Usage:** SaaS companies allowing their users to update credit cards or cancel subscriptions directly from the company's own custom settings page.",
         "responses": {
           "200": {
             "description": "Successful response"
@@ -3298,7 +3298,7 @@
           "Taxes"
         ],
         "summary": "Calculate Taxes Dynamically",
-        "description": "Calculates precise digital tax rates based on the buyer's IP and billing address before charging them.\n\n**Business Use-case:** Hybrid hardware/software companies building 100% custom checkout flows that need to show real-time tax line items to the user before they click 'Pay'.",
+        "description": "Calculates precise digital tax rates based on the buyer's IP and billing address before charging them.\n\n**Usage:** Hybrid hardware/software companies building 100% custom checkout flows that need to show real-time tax line items to the user before they click 'Pay'.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3393,7 +3393,7 @@
           "Checkouts"
         ],
         "summary": "Create Checkout Link",
-        "description": "Creates a permanent checkout link.\n\n**Business Use-case:** Automatically generating short-links for influencer marketing campaigns.",
+        "description": "Creates a permanent checkout link.\n\n**Usage:** Automatically generating short-links for influencer marketing campaigns.",
         "responses": {
           "200": {
             "description": "Successful response"
@@ -3514,7 +3514,7 @@
           "Webhooks"
         ],
         "summary": "Create Webhook",
-        "description": "Programmatically registers a new webhook endpoint to listen to events like `order.created` or `subscription.updated`.\n\n**Business Use-case:** DevTools automatically registering their syncing endpoints when a user installs their integration.",
+        "description": "Programmatically registers a new webhook endpoint to listen to events like `order.created` or `subscription.updated`.\n\n**Usage:** DevTools automatically registering their syncing endpoints when a user installs their integration.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3637,7 +3637,7 @@
           "Audience"
         ],
         "summary": "List Audience Members",
-        "description": "Returns a paginated list of all newsletter subscribers and customers in your audience.\n\n**Business Use-case:** Media brands exporting their audience list to a custom analytics warehouse.",
+        "description": "Returns a paginated list of all newsletter subscribers and customers in your audience.\n\n**Usage:** Media brands exporting their audience list to a custom analytics warehouse.",
         "responses": {
           "200": {
             "description": "Successful response"
@@ -3657,7 +3657,7 @@
           "Audience"
         ],
         "summary": "Send Broadcast",
-        "description": "Triggers a mass email broadcast to your audience via Resend.\n\n**Business Use-case:** Newsletters using a headless CMS to automatically blast out their latest article to all paid subscribers.",
+        "description": "Triggers a mass email broadcast to your audience via Resend.\n\n**Usage:** Newsletters using a headless CMS to automatically blast out their latest article to all paid subscribers.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3717,7 +3717,7 @@
           "Meters"
         ],
         "summary": "Report Metered Usage",
-        "description": "Extremely high-throughput endpoint to inject usage events.\n\n**Business Use-case:** API-first dev tools reporting token consumption every time their customer makes a request, allowing Blink to calculate the exact invoice at the end of the month.",
+        "description": "Extremely high-throughput endpoint to inject usage events.\n\n**Usage:** API-first dev tools reporting token consumption every time their customer makes a request, allowing Blink to calculate the exact invoice at the end of the month.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3764,7 +3764,7 @@
           "Meters"
         ],
         "summary": "Retrieve Customer Balance",
-        "description": "Fetches the current real-time prepaid credit balance for a customer.\n\n**Business Use-case:** AI tools displaying 'Credits Remaining: 500' in their app header.",
+        "description": "Fetches the current real-time prepaid credit balance for a customer.\n\n**Usage:** AI tools displaying 'Credits Remaining: 500' in their app header.",
         "responses": {
           "200": {
             "description": "Successful response"
@@ -3802,7 +3802,7 @@
           "Geo Pricing"
         ],
         "summary": "Create Geo-Pricing Rule",
-        "description": "Automatically sets up localized pricing overrides for specific countries.\n\n**Business Use-case:** Global gaming studios deploying a script to adjust virtual currency prices dynamically across 50+ countries based on local inflation.",
+        "description": "Automatically sets up localized pricing overrides for specific countries.\n\n**Usage:** Global gaming studios deploying a script to adjust virtual currency prices dynamically across 50+ countries based on local inflation.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3993,7 +3993,7 @@
           "Subscriptions"
         ],
         "summary": "Preview Subscription Swap",
-        "description": "Calculates the exact proration amounts before upgrading or downgrading a subscription.\n\n**Business Use-case:** E-Learning apps letting users preview exactly how much they will be charged (or credited) today if they upgrade from the 'Basic' tier to 'Pro Max'.",
+        "description": "Calculates the exact proration amounts before upgrading or downgrading a subscription.\n\n**Usage:** E-Learning apps letting users preview exactly how much they will be charged (or credited) today if they upgrade from the 'Basic' tier to 'Pro Max'.",
         "parameters": [
           {
             "name": "id",
@@ -4266,7 +4266,7 @@
     "/orders/{id}/deliverables": {
       "get": {
         "summary": "List all deliverables for an order",
-        "description": "Retrieves the complete fulfillment payload for a specific order. This is the ultimate fulfillment endpoint for custom storefronts. It automatically generates 1-hour secure pre-signed URLs for any file downloads, fetches any License Keys auto-generated during checkout, and returns dynamic claim URLs for Discord integrations.\n\n**Business Use-case:** A company building a custom 'My Library' or 'All Access' dashboard where buyers log in to access their purchased goods securely.",
+        "description": "Retrieves the complete fulfillment payload for a specific order. This is the ultimate fulfillment endpoint for custom storefronts. It automatically generates 1-hour secure pre-signed URLs for any file downloads, fetches any License Keys auto-generated during checkout, and returns dynamic claim URLs for Discord integrations.\n\n**Usage:** A company building a custom 'My Library' or 'All Access' dashboard where buyers log in to access their purchased goods securely.",
         "tags": [
           "Orders",
           "Fulfillment"
@@ -4292,7 +4292,7 @@
     "/orders/{id}/deliverables/resend": {
       "post": {
         "summary": "Resend automatic fulfillment receipt",
-        "description": "Programmatically triggers Blink's automatic fulfillment email to the buyer of this order. This email contains their secure download links, license keys, and order receipt.\n\n**Business Use-case:** A seller with a custom support dashboard wants to build a one-click 'Resend Receipt' button for their customer support team when a buyer says they didn't receive their email.",
+        "description": "Programmatically triggers Blink's automatic fulfillment email to the buyer of this order. This email contains their secure download links, license keys, and order receipt.\n\n**Usage:** A seller with a custom support dashboard wants to build a one-click 'Resend Receipt' button for their customer support team when a buyer says they didn't receive their email.",
         "tags": [
           "Orders",
           "Fulfillment"
@@ -4318,7 +4318,7 @@
     "/portal/orders/{id}/deliverables": {
       "get": {
         "summary": "List deliverables (Customer Portal)",
-        "description": "Retrieves the complete fulfillment payload for an order, authenticated via the Customer Portal JWT. This allows buyers to securely access their downloads, license keys, and Discord roles directly from the frontend without routing through your custom backend.\n\n**Business Use-case:** You are rendering a 'My Purchases' page in React and want to fetch the buyer's files directly from the browser using their session token.",
+        "description": "Retrieves the complete fulfillment payload for an order, authenticated via the Customer Portal JWT. This allows buyers to securely access their downloads, license keys, and Discord roles directly from the frontend without routing through your custom backend.\n\n**Usage:** You are rendering a 'My Purchases' page in React and want to fetch the buyer's files directly from the browser using their session token.",
         "tags": [
           "Customer Portal",
           "Fulfillment"
