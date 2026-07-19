@@ -14,7 +14,7 @@
     }
   },
   "logo": {
-    "dark": "/logo/dark.svg",
+    "dark": "/images/x-profile.png",
     "light": "/logo/light.svg"
   },
   "favicon": "/favicon.svg",
