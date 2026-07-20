@@ -91,6 +91,18 @@ Overlay checkouts work best when:
 
 ---
 
+## **Post-Purchase Mechanics**
+
+When a customer successfully completes a purchase via the overlay, you have **5 distinct options** for how to handle the fulfillment and UX:
+
+1. **Default Success Message**: If no redirect is provided, the overlay simply shows a sleek "Payment Successful" screen.
+2. **Built-in Deliverables**: If digital files are attached to the product, they are automatically fetched and displayed inside the overlay's success screen for instant download.
+3. **Custom Redirect (`success_url`)**: If you pass a `success_url` when creating the checkout session via API, the iframe will redirect to this URL. *(Note: This navigates inside the iframe. Best for full-page hosted checkouts rather than overlays).*
+4. **Frontend JS Callback (`onSuccess`)**: The most powerful option for SaaS and marketplaces. When opening the checkout via Javascript, pass an `onSuccess` callback. Blink will emit a real-time event when the payment completes, allowing you to instantly update your UI and close the modal programmatically without reloading the page.
+5. **Webhooks (`order.paid`)**: A secure, server-to-server event. The only 100% reliable way to provision SaaS accounts, as it triggers even if the customer's browser closes prematurely.
+
+---
+
 ## **Pro tip**
 
 Match your overlay colors to your website’s branding.\

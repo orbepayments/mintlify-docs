@@ -5126,7 +5126,8 @@
             }
           },
           "success_url": {
-            "type": "string"
+            "type": "string",
+            "description": "The URL to redirect the customer to upon a successful payment. If provided, Blink will immediately redirect the iframe/browser to this URL instead of showing the default success message and deliverables. (Use this for custom fulfillment or routing)."
           },
           "cancel_url": {
             "type": "string"
