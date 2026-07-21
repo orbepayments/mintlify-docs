@@ -113,9 +113,12 @@
         "tab": "API",
         "pages": [
           "api-reference/introduction",
-          "api-reference/embedded-checkout",
+          "api-reference/test-mode",
           {
             "group": "Blink API",
+            "pages": [
+              "api-reference/embedded-checkout"
+            ],
             "openapi": "api-reference/blink-api.json"
           },
           {
