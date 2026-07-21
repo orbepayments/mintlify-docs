@@ -47,6 +47,7 @@
             "group": "Products",
             "pages": [
               "add-products",
+              "deliverables",
               "share-product",
               "deleting-products",
               "products-sorting"

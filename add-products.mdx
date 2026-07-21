@@ -71,48 +71,7 @@ Supported formats: JPEG, PNG, and WebP
 
 Deliverables are what your customer receives after placing an order.<br />For maximum flexibility, you can attach any of the following deliverables to fully automate your fulfillment:
 
-<Accordion title="Files">
-  Upload files to deliver directly to your customers after purchase. Add a clear title and, if you want, a short description to give them context.
-</Accordion>
-
-<Accordion title="Button (Link)">
-  Add a link that customers can access right after purchase. Perfect for Remix links, download pages, or instant redirects to your content.
-
-  Redirect to URL<br />Send your customers to a specific URL like a remix link or any page.
-
-  Copy to clipboard<br />Anything you paste will be copied to customer's clipboard when clicked.
-</Accordion>
-
-<Accordion title="Custom">
-  Add any extra information you want customers to see in their order details after purchase. Perfect for sharing things like private notes, access instructions, or any sensitive info.
-</Accordion>
-
-<Accordion title="License Keys">
-  Automatically generate and issue software license keys upon purchase. You can enforce activation limits and manage key validations programmatically via the API.
-</Accordion>
-
-<Accordion title="Discord Roles">
-  Connect your Discord server and automatically assign specific roles to customers when they purchase.
-</Accordion>
-
-<Accordion title="GitHub Repos">
-  Seamlessly grant customers access to private GitHub repositories.
-  <Note>
-    Due to GitHub API limitations, access granted to repositories must be manually revoked when a customer's subscription ends. You can manage this from the Customer Details page.
-  </Note>
-</Accordion>
-
-<Accordion title="Entitlements (Feature Flags)">
-  Grant logical feature flags or meter credits to users upon purchase, allowing you to gate access to specific features in your app.
-</Accordion>
-
-<Accordion title="API Keys">
-  Automatically generate and issue secure API keys for your developer-facing products.
-</Accordion>
-
-<Accordion title="Webhooks">
-  Trigger a custom webhook payload to your servers whenever this product is purchased to build custom fulfillment logic.
-</Accordion>
+[Learn more about deliverable types](/deliverables)
 
 ---
 
@@ -135,9 +94,7 @@ Variable products allow customers to choose options like size or color on one pa
 </Accordion>
 
 <Accordion title="Subscription Revocation">
-  For subscription products, you can enable the **"Revoke access on subscription end"** setting. When enabled, Blink automatically locks access to digital downloads, API keys, Entitlements (Feature Flags), and Discord roles when the subscription expires, cancels, or fails to renew.
-
-  _Note: GitHub repositories require manual revocation via the Customer Details page due to API limitations._
+  For subscription products, you can enable the **"Revoke access on subscription end"** setting. When enabled, Blink automatically locks access to digital downloads, API keys, Entitlements (Feature Flags), Discord roles, and GitHub repositories when the subscription expires, cancels, or fails to renew.
 </Accordion>
 
 <Note>
