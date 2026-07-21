@@ -97,6 +97,9 @@ Deliverables are what your customer receives after placing an order.<br />For ma
 
 <Accordion title="GitHub Repos">
   Seamlessly grant customers access to private GitHub repositories.
+  <Note>
+    Due to GitHub API limitations, access granted to repositories must be manually revoked when a customer's subscription ends. You can manage this from the Customer Details page.
+  </Note>
 </Accordion>
 
 <Accordion title="Entitlements (Feature Flags)">
@@ -129,6 +132,12 @@ Variable products allow customers to choose options like size or color on one pa
 
 <Accordion title="Visibility">
   Choose how you want your product to be discovered. You can make it visible on your storefront for anyone to browse, or keep it private and share it only via direct link.
+</Accordion>
+
+<Accordion title="Subscription Revocation">
+  For subscription products, you can enable the **"Revoke access on subscription end"** setting. When enabled, Blink automatically locks access to digital downloads, API keys, Entitlements (Feature Flags), and Discord roles when the subscription expires, cancels, or fails to renew.
+
+  _Note: GitHub repositories require manual revocation via the Customer Details page due to API limitations._
 </Accordion>
 
 <Note>
