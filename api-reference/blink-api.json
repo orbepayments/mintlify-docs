@@ -4096,7 +4096,58 @@
         "description": "Returns all active affiliate programs configured by the seller.",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "program_slug": {
+                            "type": "string"
+                          },
+                          "commission_type": {
+                            "type": "string"
+                          },
+                          "commission_amount": {
+                            "type": "integer"
+                          },
+                          "cookie_duration_days": {
+                            "type": "integer"
+                          },
+                          "is_default": {
+                            "type": "boolean"
+                          },
+                          "is_private": {
+                            "type": "boolean"
+                          },
+                          "is_active": {
+                            "type": "boolean"
+                          },
+                          "onboarding_questions": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "A list of questions the affiliate must answer during registration."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -4332,6 +4383,13 @@
                   },
                   "country": {
                     "type": "string"
+                  },
+                  "onboarding_answers": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "description": "A dictionary mapping each onboarding question to the affiliate's answer."
                   }
                 },
                 "required": [
