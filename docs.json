@@ -67,7 +67,7 @@
           },
           {
             "group": "Email",
-            "icon": "mail",
+            "icon": "envelope-open",
             "expanded": true,
             "pages": [
               "cart-recovery",
