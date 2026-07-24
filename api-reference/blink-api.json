@@ -1173,7 +1173,7 @@
           "License Keys"
         ],
         "summary": "Revoke a license key",
-        "description": "Permanently disable a license key to prevent further use. Requires `x-store-id` for verification and checks the key’s status before revocation. Suitable when a license has been compromised or needs termination.",
+        "description": "Permanently disable a license key to prevent further use. Requires `x-store-id` for verification and checks the key\u2019s status before revocation. Suitable when a license has been compromised or needs termination.",
         "parameters": [
           {
             "name": "id",
@@ -4309,6 +4309,227 @@
           }
         }
       }
+    },
+    "/v1/affiliates/register": {
+      "post": {
+        "tags": [
+          "Affiliates"
+        ],
+        "summary": "Register a new affiliate",
+        "description": "Headless registration for custom storefronts. Provisions a user identity, creates an affiliate profile, and enrolls them into the store's default affiliate program.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "full_name": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "email",
+                  "full_name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Affiliate registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "pending",
+                            "approved"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/affiliates/{id}/payout-setup": {
+      "post": {
+        "tags": [
+          "Affiliates"
+        ],
+        "summary": "Initialize Payout Setup",
+        "description": "Generates a secure Stripe Connect onboarding link for the affiliate. Handles the creation of the underlying Stripe Express account if it doesn't exist.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The affiliate membership ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "return_url": {
+                    "type": "string"
+                  },
+                  "refresh_url": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "return_url"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Stripe Connect onboarding link generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "url": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/affiliates/{id}/payouts": {
+      "get": {
+        "tags": [
+          "Affiliates"
+        ],
+        "summary": "Retrieve Payout Balances",
+        "description": "Securely fetches the affiliate's live Available and Pending balances directly from Stripe, along with their recent payout transfers and their Stripe account setup status.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The affiliate membership ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Balances and transfers retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "account_status": {
+                          "type": "string",
+                          "enum": [
+                            "not_setup",
+                            "pending_onboarding",
+                            "active"
+                          ]
+                        },
+                        "available": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "amount": {
+                                "type": "integer"
+                              },
+                              "currency": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "pending": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "amount": {
+                                "type": "integer"
+                              },
+                              "currency": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "recent_transfers": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "amount": {
+                                "type": "integer"
+                              },
+                              "currency": {
+                                "type": "string"
+                              },
+                              "created": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -4633,6 +4854,15 @@
               },
               "code": {
                 "type": "string"
+              },
+              "clicks_count": {
+                "type": "integer"
+              },
+              "conversions_count": {
+                "type": "integer"
+              },
+              "total_earnings": {
+                "type": "integer"
               }
             }
           }
