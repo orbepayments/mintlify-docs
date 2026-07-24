@@ -93,7 +93,8 @@
               "splits-create-a-split",
               "splits-received",
               "splits-invites"
-            ]
+            ],
+            "icon": "chart-pie-alt"
           },
           "analytics",
           {
@@ -103,7 +104,7 @@
               "fees",
               "payouts"
             ],
-            "icon": "badge-dollar-sign",
+            "icon": "dollar-sign",
             "expanded": true
           }
         ],
