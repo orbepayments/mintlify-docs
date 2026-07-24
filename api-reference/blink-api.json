@@ -4588,6 +4588,70 @@
           }
         }
       }
+    },
+    "/v1/affiliates/{id}": {
+      "patch": {
+        "tags": [
+          "Affiliates"
+        ],
+        "summary": "Update affiliate details (Leave Program)",
+        "description": "Updates the details of a specific affiliate membership. This can be used by an affiliate to leave a program by setting the status to 'left'.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The affiliate membership ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "left"
+                    ],
+                    "description": "Set to 'left' to leave the affiliate program."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Affiliate membership updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
